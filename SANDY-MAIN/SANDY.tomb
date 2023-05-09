@@ -1,0 +1,80 @@
+struct body_ram{ 
+    name : string; //users could name their Sandy to whatever they want,
+}
+
+struct body_rom{
+    dna : bytes; //could do some cool math with bytes that lead to a bigger picture
+    created: timestamp;
+    imageURL: string;
+}
+token SANDY {
+
+    import NFT;
+    import Runtime;
+    import UID;
+
+    global _owner: address;
+
+    property name: string = "Test";//Will change to SANDY once thoroughly tested
+    property symbol: string = "TST";// Will change once properly tested
+    property isBurnable: bool = true;
+    property SANDY_SUPPLY: number = 500;
+
+
+      constructor(owner:address)
+    {
+        _owner = owner;
+    }
+    //logic to ensure mint stays withing specified bounds
+    private validateMint()
+    {
+
+    }
+
+
+    private mint() 
+    {
+
+    }
+
+
+    public mintToken(){
+        NFT.mint();//needed to mint token
+
+    }
+    public transerNFT(from:address,to:address){
+
+        NFT.tranfer();
+
+    }
+
+    public editSANDY(){
+        NFT.write()//changeable data
+
+
+    }
+    //need to get readable rom 
+    public getRom(tokenID){
+        NFT.readROM(symbol:String, id:Number)
+
+    }
+    public getRam(tokenID){
+
+        NFT.readRAM(symbol:String, id:Number)
+    }
+    //Mint function
+    trigger onMint(from: address, to: address, symbol: string, tokenID: number) {
+		Runtime.expect(Runtime.isWitness(_owner), "witness failed"); 
+		Runtime.expect(symbol == $THIS_SYMBOL, "symbol mismatch"); 
+    }
+    trigger on
+    trigger onSend(from: address, to: address, symbol: string, tokenID: number){
+        Runtime.expect(Runtime.isWitness(from), "witness failed");
+    }
+    trigger onBurn(from: address, to: address, symbol: string, tokenID: number) {
+		Runtime.expect(Runtime.isWitness(from), "witness failed");
+		
+    }
+
+
+}
