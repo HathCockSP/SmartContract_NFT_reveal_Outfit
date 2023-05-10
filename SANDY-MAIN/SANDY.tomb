@@ -3,8 +3,11 @@ struct body_ram{
 }
 
 struct body_rom{
-    dna : bytes; //could do some cool math with bytes that lead to a bigger picture
     created: timestamp;
+    dna : bytes; //could do some cool math with bytes that lead to a bigger picture
+    name: string;
+    descritpion: string;
+    infoURL: string;
     imageURL: string;
 }
 token SANDY {
@@ -15,31 +18,75 @@ token SANDY {
 
     global _owner: address;
 
+	const SANDY_SUPPLY: number = 500;
     property name: string = "Test";//Will change to SANDY once thoroughly tested
     property symbol: string = "TST";// Will change once properly tested
     property isBurnable: bool = true;
-    property SANDY_SUPPLY: number = 500;
+	property maxSupply: number = 0;
+    property owner:address = _owner
 
 
+
+    nft character< body_rom, body_ram>{
+
+        property name: string{
+            return _ROM.name;
+        }
+
+        property description: string{
+            return _ROM.description;
+
+        }
+        property infoURL: string{
+            return _ROM.infoURL;
+
+        }
+        property imageURL: string{
+           return  _ROM.imageURL;
+
+        }
+
+        property create: timestamp{
+            return _ROM.create;
+
+        }
+
+        property dna: bytes{
+            return _ROM.dna;
+
+        }
+
+
+    }
       constructor(owner:address)
     {
         _owner = owner;
     }
     //logic to ensure mint stays withing specified bounds
-    private validateMint()
-    {
+   
+   //a little something special
+	private configureDNA(){
 
+	}
+	//Mint nft from contract address and transfer to 
+    private mint(creator:address,created:timestamp,dna: bytes,name: string,descritpion: string,infoURL: string,imageURL: string) 
+    {
+		local rom:body_rom = Struct.body_rom(Time.now(),this.configureDNA(),name,description,infoURL,imageURL);
+
+    } 
+
+	 private validateMint()
+    {
+		Runtime.expect(mintNum > 0,'Mint must be greater than 0');
+		Runtime.expect(mintNum <= SANDY_SUPPLY,'Maximum number of SANDY has been minted');
     }
 
 
-    private mint() 
-    {
 
-    }
-
-
-    public mintToken(){
-        NFT.mint();//needed to mint token
+	//@Param MintNum - keeps track of how many current mints there are. May need to find a correct way to implement this
+    public mintToken(creator:address){
+	
+		
 
     }
     public transerNFT(from:address,to:address){
@@ -47,20 +94,22 @@ token SANDY {
         NFT.tranfer();
 
     }
-
-    public editSANDY(){
-        NFT.write()//changeable data
+	//will have to make sure that the owner is the only one who can edit the sandy name
+    public editSANDY(nftwowner:address,tokenID:number,name:string ){
+		local ram:editRam = Struct.body_ram(name);
+		//my assumption that write must follow the order of the struct 
+        NFT.write(nftowner,$THIS_SYMBOL,tokenID,editRam);//changeable data
 
 
     }
     //need to get readable rom 
     public getRom(tokenID){
-        NFT.readROM(symbol:String, id:Number)
+        NFT.readROM(symbol:string, id:Number)
 
     }
     public getRam(tokenID){
 
-        NFT.readRAM(symbol:String, id:Number)
+        NFT.readRAM(symbol:string, id:Number)
     }
     //Mint function
     trigger onMint(from: address, to: address, symbol: string, tokenID: number) {
