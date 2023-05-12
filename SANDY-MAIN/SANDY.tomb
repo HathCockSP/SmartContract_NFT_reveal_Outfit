@@ -17,6 +17,9 @@ token SANDY {
     import UID;
 
     global _owner: address;
+    global owns_sandy: storage_map<address,number>:
+    global _timeGate: bool; //will be used to limit address buying Sandys.
+
 
 	const SANDY_SUPPLY: number = 500;
     property name: string = "Test";//Will change to SANDY once thoroughly tested
@@ -24,6 +27,7 @@ token SANDY {
     property isBurnable: bool = true;
 	property maxSupply: number = 0;
     property owner:address = _owner
+
 
 
 
@@ -61,6 +65,7 @@ token SANDY {
       constructor(owner:address)
     {
         _owner = owner;
+        _timeGate = true;
     }
     //logic to ensure mint stays withing specified bounds
    
@@ -71,14 +76,54 @@ token SANDY {
 	//Mint nft from contract address and transfer to 
     private mint(creator:address,created:timestamp,dna: bytes,name: string,descritpion: string,infoURL: string,imageURL: string) 
     {
+
+         /*
+        Possible Issue: What if transaction fails and buyer address is still added to storage_map?
+        Answer?: only add user to storage_map once mint is confirmed.
+        */
+
 		local rom:body_rom = Struct.body_rom(Time.now(),this.configureDNA(),name,description,infoURL,imageURL);
+        if(this.checkTimeGate()){
+            Runtime.expect(this.hasSANDY(creator) == false,'Cannot purchase due to you already owning a SANDY');
+            //add logic to mint sandy and add creator to list of sandy owners
+        }
+        else{
+            //will still need to add creator to list of sandy owners
+        }
+       
 
     } 
 
-	 private validateMint()
+    private hasSANDY(buyer:address){
+        //local contains_sandy = storage.get(from); // in case i need this for comparison to work
+
+        if(owns_sandy.get(buyer) != 0 ){//what if address is not in 
+            return true;
+        }
+        return false;
+    }
+    private checkTimeGate():bool
     {
+        // check if valie to limit 1 mint per address is valid
+        if (_timeGate)
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    private timeGate_switch(){
+        Runtime.expect(Runtime.isWitness(_owner),'witness failed');
+        _timeGate = !_timeGate; //assuming negation works in phantasma. This should just negate the value.
+    }
+
+
+	 private validateMint(creator:address)
+    {
+        //Runtime.expect(Runtime.isWitness(creator),'witness failed');
 		Runtime.expect(mintNum > 0,'Mint must be greater than 0');
 		Runtime.expect(mintNum <= SANDY_SUPPLY,'Maximum number of SANDY has been minted');
+
     }
 
 
@@ -116,7 +161,16 @@ token SANDY {
 		Runtime.expect(Runtime.isWitness(_owner), "witness failed"); 
 		Runtime.expect(symbol == $THIS_SYMBOL, "symbol mismatch"); 
     }
-    trigger on
+    trigger onInfuse(from: address, to: address, symbol: string, tokenID: number){
+        Runtime.expect(Runtime.isWitness(from), "witness failed");
+    }
+
+    trigger onSeries(from: address, to: address, symbol: string, tokenID: number){
+        Runtime.expect(Runtime.isWitness(from), "witness failed");
+    }
+    trigger onWrite(from: address, to: address, symbol: string, tokenID: number){
+        Runtime.expect(Runtime.isWitness(from), "witness failed");
+    }
     trigger onSend(from: address, to: address, symbol: string, tokenID: number){
         Runtime.expect(Runtime.isWitness(from), "witness failed");
     }
