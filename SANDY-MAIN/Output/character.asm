@@ -18,7 +18,7 @@
 // Line 18:    import Time;
 // Line 19:    import Map;
 // Line 20:
-// Line 21:    global _owner: address;
+// Line 21:    global owner: address;
 // Line 22:    global owns_sandy: storage_map<address,bool>; 
 // Line 23:    global _timeGate: bool; //will be used to limit address buying Sandys.
 // Line 24:    global _infusionAmt: number;
@@ -26,14 +26,16 @@
 // Line 26:
 // Line 27:
 // Line 28:	const SANDY_SUPPLY: number = 500;
-// Line 29:    property name: string = "Test";//Will change to SANDY once thoroughly tested
-// Line 30:    property symbol: string = "TST";// Will change once properly tested
-// Line 31:    property isBurnable: bool = true;
-// Line 32:	property maxSupply: number = 0;
-// Line 33:    property owner:address = _owner;
-// Line 34:
-// Line 35:
-// Line 36:    nft character<body_rom, body_ram> {
+// Line 29:    const SANDY_SERIESID: number = 1;
+// Line 30:    property name: string = "Test";//Will change to SANDY once thoroughly tested
+// Line 31:    property symbol: string = "TST";// Will change once properly tested
+// Line 32:    property isFungible: bool = false;
+// Line 33:    property isBurnable: bool = true;
+// Line 34:	property maxSupply: number = SANDY_SUPPLY;
+// Line 35:    property owner: address = owner;
+// Line 36:
+// Line 37:
+// Line 38:    nft character<body_rom, body_ram> {
 
 // ********* getName Property ***********
 @entry_getName: // 0
@@ -52,9 +54,9 @@ ALIAS r3 $_ROM // 53
 LOAD r0 "ROM" // 53
 GET r2 $_ROM r0 // 60
 UNPACK $_ROM $_ROM // 64
-// Line 37:
-// Line 38:        property name: string{
-// Line 39:            return _ROM.name;
+// Line 39:
+// Line 40:        property name: string{
+// Line 41:            return _ROM.name;
 	COPY $_ROM r1 // 67
 	LOAD r2 "name" // 70
 	GET r1 r1 r2 // 78
@@ -62,7 +64,7 @@ UNPACK $_ROM $_ROM // 64
 	JMP @exit_getName // 84
 @exit_getName: // 87
 RET // 88
-// Line 40:        }
+// Line 42:        }
 
 // ********* getDescription Property ***********
 @entry_getDescription: // 89
@@ -81,9 +83,9 @@ ALIAS r3 $_ROM // 142
 LOAD r0 "ROM" // 142
 GET r2 $_ROM r0 // 149
 UNPACK $_ROM $_ROM // 153
-// Line 41:
-// Line 42:        property description: string{
-// Line 43:            return _ROM.description;
+// Line 43:
+// Line 44:        property description: string{
+// Line 45:            return _ROM.description;
 	COPY $_ROM r1 // 156
 	LOAD r2 "description" // 159
 	GET r1 r1 r2 // 174
@@ -91,8 +93,8 @@ UNPACK $_ROM $_ROM // 153
 	JMP @exit_getDescription // 180
 @exit_getDescription: // 183
 RET // 184
-// Line 44:
-// Line 45:        }
+// Line 46:
+// Line 47:        }
 
 // ********* getInfoURL Property ***********
 @entry_getInfoURL: // 185
@@ -111,8 +113,8 @@ ALIAS r3 $_ROM // 238
 LOAD r0 "ROM" // 238
 GET r2 $_ROM r0 // 245
 UNPACK $_ROM $_ROM // 249
-// Line 46:        property infoURL: string{
-// Line 47:            return _ROM.infoURL;
+// Line 48:        property infoURL: string{
+// Line 49:            return _ROM.infoURL;
 	COPY $_ROM r1 // 252
 	LOAD r2 "infoURL" // 255
 	GET r1 r1 r2 // 266
@@ -120,8 +122,8 @@ UNPACK $_ROM $_ROM // 249
 	JMP @exit_getInfoURL // 272
 @exit_getInfoURL: // 275
 RET // 276
-// Line 48:
-// Line 49:        }
+// Line 50:
+// Line 51:        }
 
 // ********* getImageURL Property ***********
 @entry_getImageURL: // 277
@@ -140,8 +142,8 @@ ALIAS r3 $_ROM // 330
 LOAD r0 "ROM" // 330
 GET r2 $_ROM r0 // 337
 UNPACK $_ROM $_ROM // 341
-// Line 50:        property imageURL: string{
-// Line 51:           return  _ROM.imageURL;
+// Line 52:        property imageURL: string{
+// Line 53:           return  _ROM.imageURL;
 	COPY $_ROM r1 // 344
 	LOAD r2 "imageURL" // 347
 	GET r1 r1 r2 // 359
@@ -149,8 +151,8 @@ UNPACK $_ROM $_ROM // 341
 	JMP @exit_getImageURL // 365
 @exit_getImageURL: // 368
 RET // 369
-// Line 52:
-// Line 53:        }
+// Line 54:
+// Line 55:        }
 
 // ********* getCreated Property ***********
 @entry_getCreated: // 370
@@ -169,9 +171,9 @@ ALIAS r3 $_ROM // 423
 LOAD r0 "ROM" // 423
 GET r2 $_ROM r0 // 430
 UNPACK $_ROM $_ROM // 434
-// Line 54:
-// Line 55:        property created: timestamp{
-// Line 56:            return _ROM.created;
+// Line 56:
+// Line 57:        property created: timestamp{
+// Line 58:            return _ROM.created;
 	COPY $_ROM r1 // 437
 	LOAD r2 "created" // 440
 	GET r1 r1 r2 // 451
@@ -179,8 +181,8 @@ UNPACK $_ROM $_ROM // 434
 	JMP @exit_getCreated // 457
 @exit_getCreated: // 460
 RET // 461
-// Line 57:
-// Line 58:        }
+// Line 59:
+// Line 60:        }
 
 // ********* getDna Property ***********
 @entry_getDna: // 462
@@ -199,9 +201,9 @@ ALIAS r3 $_ROM // 515
 LOAD r0 "ROM" // 515
 GET r2 $_ROM r0 // 522
 UNPACK $_ROM $_ROM // 526
-// Line 59:
-// Line 60:        property dna: bytes{
-// Line 61:            return _ROM.dna;
+// Line 61:
+// Line 62:        property dna: bytes{
+// Line 63:            return _ROM.dna;
 	COPY $_ROM r1 // 529
 	LOAD r2 "dna" // 532
 	GET r1 r1 r2 // 539

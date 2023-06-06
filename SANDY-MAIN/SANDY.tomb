@@ -18,7 +18,7 @@ token SANDY {
     import Time;
     import Map;
 
-    global _owner: address;
+    global owner: address;
     global owns_sandy: storage_map<address,bool>; 
     global _timeGate: bool; //will be used to limit address buying Sandys.
     global _infusionAmt: number;
@@ -26,11 +26,13 @@ token SANDY {
 
 
 	const SANDY_SUPPLY: number = 500;
+    const SANDY_SERIESID: number = 1;
     property name: string = "Test";//Will change to SANDY once thoroughly tested
     property symbol: string = "TST";// Will change once properly tested
+    property isFungible: bool = false;
     property isBurnable: bool = true;
-	property maxSupply: number = 0;
-    property owner:address = _owner;
+	property maxSupply: number = SANDY_SUPPLY;
+    property owner: address = owner;
 
 
     nft character<body_rom, body_ram> {
@@ -63,14 +65,13 @@ token SANDY {
         }
 
     }
-      constructor(owner:address)
+      constructor(con_creator:address)
     {
-        _owner = owner;
+        owner = con_creator;
         _timeGate = true;
         _infusionAmt = 25;
         _infusionTkn = "SOUL";
-        //params: _owner,$THIS_SYMBOL,1?,SANDY_SUPPLY,TOKENSERIES.DUPLICATE,character
-        //NFT.createSeries(from:, symbol:String, seriesID:Number, maxSupply:Number, mode:Enum, nft:Module);
+        NFT.createSeries($THIS_ADDRESS, $THIS_SYMBOL,SANDY_SERIESID,SANDY_SUPPLY,TokenSeries.Unique,character);
     }
     //logic to ensure mint stays withing specified bounds
    
@@ -91,68 +92,52 @@ token SANDY {
         return false;
     }
 	//Mint nft from contract address and transfer to 
-    private mint(creator:address,to:address,created:timestamp,dna: bytes,name: string,description: string,infoURL: string,imageURL: string,id:number) 
+    private mint(creator:address,to:address,created:timestamp,dna: bytes,name: string,description: string,infoURL: string,imageURL: string) 
     {
          /*
         Possible Issue: What if transaction fails and buyer address is still added to storage_map?
         Answer?: only add user to storage_map once mint is confirmed.
         what does 
         */
-        // so we're going to mint 500 nfts off rip
-        // If they are clainming a SANDY then this will work differently 
         
-
+        //Time.now() should ensure all NFTS are created Unique.
 		local rom:body_rom = Struct.body_rom(Time.now(),this.insertDNA(dna),name,description,infoURL,imageURL);
         local ram:body_ram = Struct.body_ram("SANDY");//template name for now
         if(this.checkTimeGate()){
-            //Runtime.expect(this.hasSANDY(creator) == false,'Cannot purchase due to you already owning a SANDY');
+
             Runtime.expect(owns_sandy.has(to) == false,"Cannot purchase due to you already owning a SANDY");
-            //add logic to mint sandy and add creator to list of sandy owners
-           
-            //params:creator,to,$THIS_SYMBOL,body_rom,body_ram,id
-            NFT.mint(creator, to, $THIS_SYMBOL, rom, ram, 1);//might change the series ID later
-            //params: creator,$THIS_SYMBOL,id,_infusionTkn,_infuseAmt
-            NFT.infuse(creator, $THIS_SYMBOL, id, _infusionTkn, _infusionAmt);
+            //need to find out how to get NFTID 
+            NFT.mint($THIS_ADDRESS, to, $THIS_SYMBOL, rom, ram, SANDY_SERIESID);//might change the series ID later
+
+            //NFT.infuse(creator, $THIS_SYMBOL, id, _infusionTkn, _infusionAmt);
             //assuming the minter is the to
             owns_sandy.set(to,true);
         }
-        else{
-            //will still need to add creator to list of sandy owners
+        else {
 
-             //params:creator,to,$THIS_SYMBOL,body_rom,body_ram,id
-            NFT.mint(creator, to, $THIS_SYMBOL, rom, ram, 1);
-            //params: creator,$THIS_SYMBOL,id,_infusionTkn,_infuseAmt
-            NFT.infuse(creator, $THIS_SYMBOL, id, _infusionTkn, _infusionAmt);
+        	NFT.mint($THIS_ADDRESS, to, $THIS_SYMBOL, rom, ram, SANDY_SERIESID);
+            //NFTID
+   
+           // NFT.infuse(creator, $THIS_SYMBOL, id, _infusionTkn, _infusionAmt);
         }
     } 
     
     
     public timeGate_switch(){
-        Runtime.expect(Runtime.isWitness(_owner),"witness failed");
+        Runtime.expect(Runtime.isWitness(owner),"witness failed");
         _timeGate = !_timeGate; //assuming negation works in phantasma. This should just negate the value.
     }
 
-    //IF NFT.mint keeps track of MAX mint then there is no need for this function
-	 private validateMint(creator:address)
-    {
-        //not sure how to get a mint Number --> find out
-        //Runtime.expect(Runtime.isWitness(creator),'witness failed');
-		//Runtime.expect(mintNum > 0,"Mint must be greater than 0");
-		//Runtime.expect(mintNum <= SANDY_SUPPLY,"Maximum number of SANDY has been minted");
-
-    }
 
 	//@Param MintNum - keeps track of how many current mints there are. May need to find a correct way to implement this
-    public mintToken(creator:address,to:address,created:timestamp,dna: bytes,name: string,descritpion: string,infoURL: string,imageURL: string,id:number){
-        Runtime.expect(Runtime.isWitness(creator),"Must own wallet you are minting from");
-        this.mint(creator,to,created,this.insertDNA(dna),name,descritpion,infoURL,imageURL,id);
+    public mintToken(creator:address,to:address,created:timestamp,dna: bytes,name: string,descritpion: string,infoURL: string,imageURL: string){
+        //Runtime.expect(Runtime.isWitness(creator),"Must own wallet you are minting from");
+        this.mint(creator,to,created,this.insertDNA(dna),name,descritpion,infoURL,imageURL);
     
     }
     public transerNFT(from:address,to:address,id:number){
-        //Will only have this turned on once.
         Runtime.expect(Runtime.isWitness(from),"Must be owner of NFT to Transfer");
-   
-            NFT.transfer(from,to,$THIS_SYMBOL,id);
+        NFT.transfer(from,to,$THIS_SYMBOL,id);
 
     }
 
@@ -183,11 +168,10 @@ token SANDY {
     trigger onUpgrade(from:address)
     {
         // check is witness and is current owner
-		Runtime.expect(Runtime.isWitness(_owner), "invalid witness");
+		Runtime.expect(Runtime.isWitness(owner), "invalid witness");
     }
     //Mint function
     trigger onMint(from: address, to: address, symbol: string, tokenID: number) {
-		Runtime.expect(Runtime.isWitness(_owner), "witness failed"); 
 		Runtime.expect(symbol == $THIS_SYMBOL, "symbol mismatch");
         //might need to add NFT owns to right here 
     }
