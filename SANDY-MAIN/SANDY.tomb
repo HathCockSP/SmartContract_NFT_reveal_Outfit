@@ -1,39 +1,78 @@
-struct body_ram{ 
-    name : string; //users could name their Sandy to whatever they want,
+struct limb_ram{
+    inUse: bool;
+
 }
 
-struct body_rom{
-    created: timestamp;
-    dna : bytes; //could do some cool math with bytes that lead to a bigger picture
+struct limb_rom {
     name: string;
     description: string;
     infoURL: string;
     imageURL: string;
 }
-token SANDY {
 
+struct body_ram{ 
+}
+
+struct body_rom{
+    created: timestamp;
+    name: string;
+    description: string;
+    infoURL: string;
+    imageURL: string;
+    sandType: string;
+    skinType: string;
+
+}
+token SANDY {
+    import Array;
     import NFT;
     import Runtime;
-    import UID; 
     import Time;
+    import Token;
     import Map;
 
     global owner: address;
     global owns_sandy: storage_map<address,bool>; 
-    global _timeGate: bool; //will be used to limit address buying Sandys.
     global _infusionAmt: number;
+    /*
+     - Can use the seriesID as the number and can use randomization that way. Will have to think more about this
+    */
+    global _limbs: storage_map<string,number>; //wanted this to be an array so I can get index by modulus. Will test out.
+    global _categories: storage_map<string,number>;
     global _infusionTkn: string;
 
 
-	const SANDY_SUPPLY: number = 500;
+	const DOLL_SUPPLY: number = 500;
     const SANDY_SERIESID: number = 1;
     property name: string = "Test";//Will change to SANDY once thoroughly tested
     property symbol: string = "TST";// Will change once properly tested
     property isFungible: bool = false;
+    property isFinite: bool = true;
     property isBurnable: bool = true;
-	property maxSupply: number = SANDY_SUPPLY;
+	property maxSupply: number = DOLL_SUPPLY;
     property owner: address = owner;
+    
+    nft limb<limb_rom,limb_ram> {
 
+    property name: string{
+        return _ROM.name;
+
+    }
+
+    property description: string{
+        return _ROM.description;
+
+    }
+    property infoURL: string{
+        return _ROM.infoURL;
+
+    }
+    property imageURL: string{
+        return _ROM.imageURL;
+
+    }
+
+    }
 
     nft character<body_rom, body_ram> {
 
@@ -59,92 +98,74 @@ token SANDY {
 
         }
 
-        property dna: bytes{
-            return _ROM.dna;
+         property sandType: string{
+            return _ROM.sandType;
+        }
 
+        property skinType: string{
+            return _ROM.skinType;
         }
 
     }
       constructor(con_creator:address)
     {
         owner = con_creator;
-        _timeGate = true;
-        _infusionAmt = 25;
         _infusionTkn = "SOUL";
-        NFT.createSeries($THIS_ADDRESS, $THIS_SYMBOL,SANDY_SERIESID,SANDY_SUPPLY,TokenSeries.Unique,character);
+        local assetDecimals:number = 10^Token.getDecimals(_infusionTkn);    
+        _infusionAmt = 50*assetDecimals;
+
+        NFT.createSeries(owner, $THIS_SYMBOL,SANDY_SERIESID,DOLL_SUPPLY,TokenSeries.Unique,character);
     }
-    //logic to ensure mint stays withing specified bounds
    
-   //a little something special Do LATER!!
-	private insertDNA(dna:bytes):bytes {
-        //encode bytes for an image.
-        //manipulate some dna
-        return 0x04;
-	}
-
-    private checkTimeGate():bool
-    {
-        // check if valie to limit 1 mint per address is valid
-        if (_timeGate)
-        {
-            return true;
-        }
-        return false;
-    }
-	//Mint nft from contract address and transfer to 
-    private mint(creator:address,to:address,created:timestamp,dna: bytes,name: string,description: string,infoURL: string,imageURL: string) 
-    {
-         /*
-        Possible Issue: What if transaction fails and buyer address is still added to storage_map?
-        Answer?: only add user to storage_map once mint is confirmed.
-        what does 
-        */
-        
-        //Time.now() should ensure all NFTS are created Unique.
-		local rom:body_rom = Struct.body_rom(Time.now(),this.insertDNA(dna),name,description,infoURL,imageURL);
-        local ram:body_ram = Struct.body_ram("SANDY");//template name for now
-        if(this.checkTimeGate()){
-
-            Runtime.expect(owns_sandy.has(to) == false,"Cannot purchase due to you already owning a SANDY");
-            //need to find out how to get NFTID 
-            NFT.mint($THIS_ADDRESS, to, $THIS_SYMBOL, rom, ram, SANDY_SERIESID);//might change the series ID later
-
-            //NFT.infuse(creator, $THIS_SYMBOL, id, _infusionTkn, _infusionAmt);
-            //assuming the minter is the to
-            owns_sandy.set(to,true);
-        }
-        else {
-
-        	NFT.mint($THIS_ADDRESS, to, $THIS_SYMBOL, rom, ram, SANDY_SERIESID);
-            //NFTID
-   
-           // NFT.infuse(creator, $THIS_SYMBOL, id, _infusionTkn, _infusionAmt);
-        }
-    } 
-    
-    
-    public timeGate_switch(){
-        Runtime.expect(Runtime.isWitness(owner),"witness failed");
-        _timeGate = !_timeGate; //assuming negation works in phantasma. This should just negate the value.
-    }
-
-
-	//@Param MintNum - keeps track of how many current mints there are. May need to find a correct way to implement this
-    public mintToken(creator:address,to:address,created:timestamp,dna: bytes,name: string,descritpion: string,infoURL: string,imageURL: string){
-        //Runtime.expect(Runtime.isWitness(creator),"Must own wallet you are minting from");
-        this.mint(creator,to,created,this.insertDNA(dna),name,descritpion,infoURL,imageURL);
-    
-    }
-    public transerNFT(from:address,to:address,id:number){
+     public transerNFT(from:address,to:address,id:number){
         Runtime.expect(Runtime.isWitness(from),"Must be owner of NFT to Transfer");
         NFT.transfer(from,to,$THIS_SYMBOL,id);
-
     }
 
+    public mintBody(to:address,created:timestamp,name:string,description: string,infoURL: string,imageURL: string,sandType: string, skinType: string) 
+    {
+        Runtime.expect(owns_sandy.has(to) == false,"Cannot purchase due to you already owning a SANDY"); 
+        Runtime.expect(Runtime.isWitness(to),"Must be witness");
+		local rom:body_rom = Struct.body_rom(Time.now(),name,description,infoURL,imageURL,sandType,skinType);
+        //local ram:body_ram = Struct.body_ram("SANDY");//template name for now
+          
+            /* Test Can I infust once i Mint to another Address?? Needs to be Tested*/
+        local id = NFT.mint(owner,owner, $THIS_SYMBOL, rom,"", SANDY_SERIESID);
+        NFT.infuse(owner, $THIS_SYMBOL, id, _infusionTkn, _infusionAmt);
+        this.transerNFT(owner,to,id);
+        owns_sandy.set(to,true);
+    } 
+    
+     private initMint(seriesID:number,name: string,description: string,infoURL: string,imageURL: string){
+        local rom:limb_rom = Struct.limb_rom(name,description,infoURL,imageURL);
+        local id: number = NFT.mint(owner,owner, $THIS_SYMBOL, rom,"",seriesID);
+    }
+  
+	//@Param seriesId - Must be a unique number, could use UID.generate()
+    public createLimb(seriesID:number,limbSupply:number,name: string,description: string,infoURL: string,imageURL: string){
+        Runtime.expect(Runtime.isWitness(owner),"Must be owner of contract");
+        NFT.createSeries(owner, $THIS_SYMBOL,seriesID,limbSupply,TokenSeries.Duplicated,limb);
+        local rom:limb_rom = Struct.limb_rom(name,description,infoURL,imageURL);
+        this.initMint(seriesID,name,description,infoURL,imageURL);
+    }
+
+   
+    //should give you a random limb back
+    public mintLimb(from:address,to:address,seriesID:number)
+    {   
+        Runtime.expect(Runtime.isWitness(from),"Must be a witness");
+        //need to randomize seriesId -> this is assuming all I need is a seriesID.
+        //do randomization for SeriesID;
+        local id: number = NFT.mint(from,to, $THIS_SYMBOL,"","",seriesID);
+    }
+
+    
+
+    //Will deprecated and used for somthing else
 	//will have to make sure that the owner is the only one who can edit the sandy name
     public editSANDY(nftOwner:address,tokenID:number,name:string){
         Runtime.expect(Runtime.isWitness(nftOwner),"Must be owner of NFT");//have to find a way to get current nft owner
-		local editRam:body_ram = Struct.body_ram(name);
+		local editRam:body_ram = Struct.body_ram();
 		//my assumption that write must follow the order of the struct 
         NFT.write(nftOwner,$THIS_SYMBOL,tokenID,editRam);//changeable data
 
@@ -155,7 +176,6 @@ token SANDY {
     //- How do I make return type a struct initiialized to the rom size
     public getRom(symbol:string, id:number):body_rom {
          local nftROM:body_rom = NFT.readROM<body_rom>($THIS_SYMBOL, id);
-         
          return nftROM;
     }
 

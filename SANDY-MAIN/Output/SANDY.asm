@@ -1,919 +1,1007 @@
 
 // ********* getName Property ***********
 @entry_getName: // 0
-	ALIAS r1 $literalexpression123 // 1
-	LOAD $literalexpression123 "Test" // 1
-	PUSH $literalexpression123 // 9
+	ALIAS r1 $literalexpression172 // 1
+	LOAD $literalexpression172 "Test" // 1
+	PUSH $literalexpression172 // 9
 	JMP @exit_getName // 11
 @exit_getName: // 14
 RET // 15
 
 // ********* getSymbol Property ***********
 @entry_getSymbol: // 16
-	ALIAS r1 $literalexpression127 // 17
-	LOAD $literalexpression127 "TST" // 17
-	PUSH $literalexpression127 // 24
+	ALIAS r1 $literalexpression176 // 17
+	LOAD $literalexpression176 "TST" // 17
+	PUSH $literalexpression176 // 24
 	JMP @exit_getSymbol // 26
 @exit_getSymbol: // 29
 RET // 30
 
 // ********* isFungible Property ***********
 @entry_isFungible: // 31
-	ALIAS r1 $literalexpression131 // 32
-	LOAD $literalexpression131 false // 32
-	PUSH $literalexpression131 // 37
+	ALIAS r1 $literalexpression180 // 32
+	LOAD $literalexpression180 false // 32
+	PUSH $literalexpression180 // 37
 	JMP @exit_isFungible // 39
 @exit_isFungible: // 42
 RET // 43
 
-// ********* isBurnable Property ***********
-@entry_isBurnable: // 44
-	ALIAS r1 $literalexpression135 // 45
-	LOAD $literalexpression135 true // 45
-	PUSH $literalexpression135 // 50
-	JMP @exit_isBurnable // 52
-@exit_isBurnable: // 55
+// ********* isFinite Property ***********
+@entry_isFinite: // 44
+	ALIAS r1 $literalexpression184 // 45
+	LOAD $literalexpression184 true // 45
+	PUSH $literalexpression184 // 50
+	JMP @exit_isFinite // 52
+@exit_isFinite: // 55
 RET // 56
 
+// ********* isBurnable Property ***********
+@entry_isBurnable: // 57
+	ALIAS r1 $literalexpression188 // 58
+	LOAD $literalexpression188 true // 58
+	PUSH $literalexpression188 // 63
+	JMP @exit_isBurnable // 65
+@exit_isBurnable: // 68
+RET // 69
+
 // ********* getMaxSupply Property ***********
-@entry_getMaxSupply: // 57
-	ALIAS r1 $SANDY_SUPPLY // 58
-	LOAD $SANDY_SUPPLY 500 // 58
-	PUSH $SANDY_SUPPLY // 64
-	JMP @exit_getMaxSupply // 66
-@exit_getMaxSupply: // 69
-RET // 70
+@entry_getMaxSupply: // 70
+	ALIAS r1 $DOLL_SUPPLY // 71
+	LOAD $DOLL_SUPPLY 500 // 71
+	PUSH $DOLL_SUPPLY // 77
+	JMP @exit_getMaxSupply // 79
+@exit_getMaxSupply: // 82
+RET // 83
 
 // ********* getOwner Property ***********
-@entry_getOwner: // 71
-ALIAS r1 $dataGet // 72
-LOAD $dataGet "Data.Get" // 72
-ALIAS r2 $contractName // 84
-LOAD $contractName "SANDY" // 84
-ALIAS r3 $owner // 93
+@entry_getOwner: // 84
+ALIAS r1 $dataGet // 85
+LOAD $dataGet "Data.Get" // 85
+ALIAS r2 $contractName // 97
+LOAD $contractName "SANDY" // 97
+ALIAS r3 $owner // 106
 // reading global: owner
-LOAD r0 8 // 93
-PUSH r0 // 98
-LOAD r0 "owner" // 100
-PUSH r0 // 109
-PUSH $contractName // 111
-EXTCALL $dataGet // 113
-POP $owner // 115
-PUSH $owner // 117
-EXTCALL "Address()" // 119
-POP $owner // 134
-	COPY $owner r1 // 136
-	PUSH r1 // 139
-	JMP @exit_getOwner // 141
-@exit_getOwner: // 144
-RET // 145
-// Line 64:
-// Line 65:        }
-// Line 66:
-// Line 67:    }
+LOAD r0 8 // 106
+PUSH r0 // 111
+LOAD r0 "owner" // 113
+PUSH r0 // 122
+PUSH $contractName // 124
+EXTCALL $dataGet // 126
+POP $owner // 128
+PUSH $owner // 130
+EXTCALL "Address()" // 132
+POP $owner // 147
+	COPY $owner r1 // 149
+	PUSH r1 // 152
+	JMP @exit_getOwner // 154
+@exit_getOwner: // 157
+RET // 158
+// Line 107:        }
+// Line 108:
+// Line 109:    }
 
 // ********* Initialize Constructor ***********
-@entry_constructor: // 146
-ALIAS r1 $nexus_protocol_version // 147
+@entry_constructor: // 159
+ALIAS r1 $nexus_protocol_version // 160
 // validate protocol version
-LOAD r0 "Runtime.Version" // 147
-EXTCALL r0 // 166
-POP r0 // 168
-LOAD $nexus_protocol_version 8 // 170
-LT r0 $nexus_protocol_version r0 // 175
-JMPNOT r0 @protocol_version_validated // 179
-LOAD r0 "Current nexus protocol version should be 8 or more" // 183
-THROW r0 // 237
-@protocol_version_validated: NOP // 240
-ALIAS r1 $owner // 240
+LOAD r0 "Runtime.Version" // 160
+EXTCALL r0 // 179
+POP r0 // 181
+LOAD $nexus_protocol_version 8 // 183
+LT r0 $nexus_protocol_version r0 // 188
+JMPNOT r0 @protocol_version_validated // 192
+LOAD r0 "Current nexus protocol version should be 8 or more" // 196
+THROW r0 // 250
+@protocol_version_validated: NOP // 253
+ALIAS r1 $owner // 253
 // clearing owns_sandy storage
-LOAD r0 "owns_sandy" // 240
-PUSH r0 // 254
-LOAD r0 "Map.Clear" // 256
-EXTCALL r0 // 269
-ALIAS r2 $_timeGate // 271
-ALIAS r3 $_infusionAmt // 271
-ALIAS r4 $_infusionTkn // 271
-// Line 68:      constructor(con_creator:address)
-ALIAS r5 $con_creator // 271
-POP $con_creator // 271
-PUSH $con_creator // 273
-EXTCALL "Address()" // 275
-POP $con_creator // 290
-// Line 69:    {
-// Line 70:        owner = con_creator;
-	COPY $con_creator r6 // 292
-	COPY r6 $owner // 295
-// Line 71:        _timeGate = true;
-	ALIAS r6 $literalexpression230 // 298
-	LOAD $literalexpression230 true // 298
-	COPY $literalexpression230 $_timeGate // 303
-// Line 72:        _infusionAmt = 25;
-	ALIAS r6 $literalexpression232 // 306
-	LOAD $literalexpression232 25 // 306
-	COPY $literalexpression232 $_infusionAmt // 311
-// Line 73:        _infusionTkn = "SOUL";
-	ALIAS r6 $literalexpression234 // 314
-	LOAD $literalexpression234 "SOUL" // 314
-	COPY $literalexpression234 $_infusionTkn // 322
-// Line 74:        NFT.createSeries($THIS_ADDRESS, $THIS_SYMBOL,SANDY_SERIESID,SANDY_SUPPLY,TokenSeries.Unique,character);
-	ALIAS r6 $methodcallexpression236 // 325
-	LOAD r7 0x06076765744E616D6504000000000107746F6B656E4944030E6765744465736372697074696F6E04590000000107746F6B656E4944030A676574496E666F55524C04B90000000107746F6B656E4944030B676574496D61676555524C04150100000107746F6B656E4944030A6765744372656174656405720100000006676574446E6102CE0100000000 // abi // 325
-	PUSH r7 // 467
-	LOAD r7 0x0004010D000403524F4D030003010D00040553414E445903000D00041152756E74696D652E52656164546F6B656E070004023202020D000403524F4D300203003203030203010D0204046E616D65300101020301085800000B0004010D000403524F4D030003010D00040553414E445903000D00041152756E74696D652E52656164546F6B656E070004023202020D000403524F4D300203003203030203010D02040B6465736372697074696F6E30010102030108B800000B0004010D000403524F4D030003010D00040553414E445903000D00041152756E74696D652E52656164546F6B656E070004023202020D000403524F4D300203003203030203010D020407696E666F55524C300101020301081401000B0004010D000403524F4D030003010D00040553414E445903000D00041152756E74696D652E52656164546F6B656E070004023202020D000403524F4D300203003203030203010D020408696D61676555524C300101020301087101000B0004010D000403524F4D030003010D00040553414E445903000D00041152756E74696D652E52656164546F6B656E070004023202020D000403524F4D300203003203030203010D0204076372656174656430010102030108CD01000B0004010D000403524F4D030003010D00040553414E445903000D00041152756E74696D652E52656164546F6B656E070004023202020D000403524F4D300203003203030203010D020403646E61300101020301082502000B // script // 469
-	PUSH r7 // 1025
-	ALIAS r7 $literalexpression249 // 1027
-	LOAD $literalexpression249 0 Enum // 1027
-	PUSH $literalexpression249 // 1035
-	ALIAS r7 $SANDY_SUPPLY // 1037
-	LOAD $SANDY_SUPPLY 500 // 1037
-	PUSH $SANDY_SUPPLY // 1043
-	ALIAS r7 $SANDY_SERIESID // 1045
-	LOAD $SANDY_SERIESID 1 // 1045
-	PUSH $SANDY_SERIESID // 1050
-	ALIAS r7 $literalexpression246 // 1052
-	LOAD $literalexpression246 "SANDY" // 1052
-	PUSH $literalexpression246 // 1061
-	ALIAS r7 $literalexpression244 // 1063
-	LOAD $literalexpression244 0x0200DE439474EC46783F21573EFC03A9A014884D4499CC92D0DF1960CBD40DDAA503 // 1063
-	PUSH $literalexpression244 // 1101
-	EXTCALL "Address()" // 1103
-	POP $literalexpression244 // 1118
-	PUSH $literalexpression244 // 1120
-	LOAD $methodcallexpression236 "Nexus.CreateTokenSeries" // 1122
-	EXTCALL $methodcallexpression236 // 1149
-@exit_constructor: // 1151
-LOAD r5 "Data.Set" // 1152
+LOAD r0 "owns_sandy" // 253
+PUSH r0 // 267
+LOAD r0 "Map.Clear" // 269
+EXTCALL r0 // 282
+ALIAS r2 $_infusionAmt // 284
+// clearing _limbs storage
+LOAD r0 "_limbs" // 284
+PUSH r0 // 294
+LOAD r0 "Map.Clear" // 296
+EXTCALL r0 // 309
+// clearing _categories storage
+LOAD r0 "_categories" // 311
+PUSH r0 // 326
+LOAD r0 "Map.Clear" // 328
+EXTCALL r0 // 341
+ALIAS r3 $_infusionTkn // 343
+// Line 110:      constructor(con_creator:address)
+ALIAS r4 $con_creator // 343
+POP $con_creator // 343
+PUSH $con_creator // 345
+EXTCALL "Address()" // 347
+POP $con_creator // 362
+// Line 111:    {
+// Line 112:        owner = con_creator;
+	COPY $con_creator r5 // 364
+	COPY r5 $owner // 367
+// Line 113:        _infusionTkn = "SOUL";
+	ALIAS r5 $literalexpression366 // 370
+	LOAD $literalexpression366 "SOUL" // 370
+	COPY $literalexpression366 $_infusionTkn // 378
+// Line 114:        local assetDecimals:number = 10^Token.getDecimals(_infusionTkn);    
+	ALIAS r5 $assetDecimals // 381
+	ALIAS r6 $literalexpression367 // 381
+	LOAD $literalexpression367 10 // 381
+	ALIAS r7 $methodcallexpression368 // 386
+	COPY $_infusionTkn r8 // 386
+	PUSH r8 // 389
+	LOAD $methodcallexpression368 "Runtime.GetTokenDecimals" // 391
+	EXTCALL $methodcallexpression368 // 419
+	POP $methodcallexpression368 // 421
+	POW $literalexpression367 $methodcallexpression368 r8 // 423
+	COPY r8 $assetDecimals // 427
+// Line 115:        _infusionAmt = 50*assetDecimals;
+	ALIAS r6 $literalexpression375 // 430
+	LOAD $literalexpression375 50 // 430
+	COPY $assetDecimals r7 // 435
+	MUL $literalexpression375 r7 r8 // 438
+	COPY r8 $_infusionAmt // 442
+// Line 116:
+// Line 117:        NFT.createSeries(owner, $THIS_SYMBOL,SANDY_SERIESID,DOLL_SUPPLY,TokenSeries.Unique,character);
+	ALIAS r6 $methodcallexpression379 // 445
+	LOAD r7 0x07076765744E616D6504000000000107746F6B656E4944030E6765744465736372697074696F6E04590000000107746F6B656E4944030A676574496E666F55524C04B90000000107746F6B656E4944030B676574496D61676555524C04150100000107746F6B656E4944030A676574437265617465640572010000000B67657453616E645479706504CE010000000B676574536B696E54797065042B0200000000 // abi // 445
+	PUSH r7 // 610
+	LOAD r7 0x0004010D000403524F4D030003010D00040553414E445903000D00041152756E74696D652E52656164546F6B656E070004023202020D000403524F4D300203003203030203010D0204046E616D65300101020301085800000B0004010D000403524F4D030003010D00040553414E445903000D00041152756E74696D652E52656164546F6B656E070004023202020D000403524F4D300203003203030203010D02040B6465736372697074696F6E30010102030108B800000B0004010D000403524F4D030003010D00040553414E445903000D00041152756E74696D652E52656164546F6B656E070004023202020D000403524F4D300203003203030203010D020407696E666F55524C300101020301081401000B0004010D000403524F4D030003010D00040553414E445903000D00041152756E74696D652E52656164546F6B656E070004023202020D000403524F4D300203003203030203010D020408696D61676555524C300101020301087101000B0004010D000403524F4D030003010D00040553414E445903000D00041152756E74696D652E52656164546F6B656E070004023202020D000403524F4D300203003203030203010D0204076372656174656430010102030108CD01000B0004010D000403524F4D030003010D00040553414E445903000D00041152756E74696D652E52656164546F6B656E070004023202020D000403524F4D300203003203030203010D02040873616E6454797065300101020301082A02000B0004010D000403524F4D030003010D00040553414E445903000D00041152756E74696D652E52656164546F6B656E070004023202020D000403524F4D300203003203030203010D020408736B696E54797065300101020301088702000B // script // 612
+	PUSH r7 // 1266
+	ALIAS r7 $literalexpression391 // 1268
+	LOAD $literalexpression391 0 Enum // 1268
+	PUSH $literalexpression391 // 1276
+	ALIAS r7 $DOLL_SUPPLY // 1278
+	LOAD $DOLL_SUPPLY 500 // 1278
+	PUSH $DOLL_SUPPLY // 1284
+	ALIAS r7 $SANDY_SERIESID // 1286
+	LOAD $SANDY_SERIESID 1 // 1286
+	PUSH $SANDY_SERIESID // 1291
+	ALIAS r7 $literalexpression388 // 1293
+	LOAD $literalexpression388 "SANDY" // 1293
+	PUSH $literalexpression388 // 1302
+	COPY $owner r7 // 1304
+	PUSH r7 // 1307
+	LOAD $methodcallexpression379 "Nexus.CreateTokenSeries" // 1309
+	EXTCALL $methodcallexpression379 // 1336
+@exit_constructor: // 1338
+LOAD r4 "Data.Set" // 1339
 // writing global: owner
-PUSH $owner // 1164
-LOAD r0 "owner" // 1166
-PUSH r0 // 1175
-EXTCALL r5 // 1177
-// writing global: _timeGate
-PUSH $_timeGate // 1179
-LOAD r0 "_timeGate" // 1181
-PUSH r0 // 1194
-EXTCALL r5 // 1196
+PUSH $owner // 1351
+LOAD r0 "owner" // 1353
+PUSH r0 // 1362
+EXTCALL r4 // 1364
 // writing global: _infusionAmt
-PUSH $_infusionAmt // 1198
-LOAD r0 "_infusionAmt" // 1200
-PUSH r0 // 1216
-EXTCALL r5 // 1218
+PUSH $_infusionAmt // 1366
+LOAD r0 "_infusionAmt" // 1368
+PUSH r0 // 1384
+EXTCALL r4 // 1386
 // writing global: _infusionTkn
-PUSH $_infusionTkn // 1220
-LOAD r0 "_infusionTkn" // 1222
-PUSH r0 // 1238
-EXTCALL r5 // 1240
-RET // 1242
-// Line 75:    }
-
-// ********* insertDNA Method ***********
-@entry_insertDNA: // 1243
-// Line 76:    //logic to ensure mint stays withing specified bounds
-// Line 77:   
-// Line 78:   //a little something special Do LATER!!
-// Line 79:	private insertDNA(dna:bytes):bytes {
-ALIAS r1 $dna // 1244
-POP $dna // 1244
-// Line 80:        //encode bytes for an image.
-// Line 81:        //manipulate some dna
-// Line 82:        return 0x04;
-	ALIAS r2 $literalexpression255 // 1246
-	LOAD $literalexpression255 0x04 // 1246
-	PUSH $literalexpression255 // 1251
-	JMP @exit_insertDNA // 1253
-@exit_insertDNA: // 1256
-RET // 1257
-// Line 83:	}
-
-// ********* checkTimeGate Method ***********
-@entry_checkTimeGate: // 1258
-ALIAS r1 $dataGet // 1259
-LOAD $dataGet "Data.Get" // 1259
-ALIAS r2 $contractName // 1271
-LOAD $contractName "SANDY" // 1271
-ALIAS r3 $_timeGate // 1280
-// reading global: _timeGate
-LOAD r0 6 // 1280
-PUSH r0 // 1285
-LOAD r0 "_timeGate" // 1287
-PUSH r0 // 1300
-PUSH $contractName // 1302
-EXTCALL $dataGet // 1304
-POP $_timeGate // 1306
-// Line 84:
-// Line 85:    private checkTimeGate():bool
-// Line 86:    {
-// Line 87:        // check if valie to limit 1 mint per address is valid
-// Line 88:        if (_timeGate)
-	COPY $_timeGate r1 // 1308
-		JMPNOT r1 @then_ifstatement259 // 1311
-// Line 89:        {
-// Line 90:            return true;
-		ALIAS r2 $literalexpression262 // 1315
-		LOAD $literalexpression262 true // 1315
-		PUSH $literalexpression262 // 1320
-		JMP @exit_checkTimeGate // 1322
-		@then_ifstatement259: NOP // 1326
-// Line 91:        }
-// Line 92:        return false;
-	ALIAS r1 $literalexpression264 // 1326
-	LOAD $literalexpression264 false // 1326
-	PUSH $literalexpression264 // 1331
-	JMP @exit_checkTimeGate // 1333
-@exit_checkTimeGate: // 1336
-RET // 1337
-// Line 93:    }
-
-// ********* mint Method ***********
-@entry_mint: // 1338
-// Line 94:	//Mint nft from contract address and transfer to 
-// Line 95:    private mint(creator:address,to:address,created:timestamp,dna: bytes,name: string,description: string,infoURL: string,imageURL: string) 
-ALIAS r1 $creator // 1339
-POP $creator // 1339
-PUSH $creator // 1341
-EXTCALL "Address()" // 1343
-POP $creator // 1358
-ALIAS r2 $to // 1360
-POP $to // 1360
-PUSH $to // 1362
-EXTCALL "Address()" // 1364
-POP $to // 1379
-ALIAS r3 $created // 1381
-POP $created // 1381
-PUSH $created // 1383
-EXTCALL "Timestamp()" // 1385
-POP $created // 1402
-ALIAS r4 $dna // 1404
-POP $dna // 1404
-ALIAS r5 $name // 1406
-POP $name // 1406
-ALIAS r6 $description // 1408
-POP $description // 1408
-ALIAS r7 $infoURL // 1410
-POP $infoURL // 1410
-ALIAS r8 $imageURL // 1412
-POP $imageURL // 1412
-// Line 96:    {
-// Line 97:         /*
-// Line 98:        Possible Issue: What if transaction fails and buyer address is still added to storage_map?
-// Line 99:        Answer?: only add user to storage_map once mint is confirmed.
-// Line 100:        what does 
-// Line 101:        */
-// Line 102:        
-// Line 103:        //Time.now() should ensure all NFTS are created Unique.
-// Line 104:		local rom:body_rom = Struct.body_rom(Time.now(),this.insertDNA(dna),name,description,infoURL,imageURL);
-	ALIAS r9 $rom // 1414
-	CLEAR r10 // 1414
-	ALIAS r12 $methodcallexpression291 // 1416
-	LOAD $methodcallexpression291 "Runtime.Time" // 1416
-	EXTCALL $methodcallexpression291 // 1432
-	POP $methodcallexpression291 // 1434
-	LOAD r11 "created" // 1436
-	PUT $methodcallexpression291 r10 r11 // 1447
-	ALIAS r12 $methodcallexpression292 // 1451
-	COPY $dna r13 // 1451
-	PUSH r13 // 1454
-	CALL @entry_insertDNA // 1456
-	POP $methodcallexpression292 // 1460
-	LOAD r11 "dna" // 1462
-	PUT $methodcallexpression292 r10 r11 // 1469
-	COPY $name r12 // 1473
-	LOAD r11 "name" // 1476
-	PUT r12 r10 r11 // 1484
-	COPY $description r12 // 1488
-	LOAD r11 "description" // 1491
-	PUT r12 r10 r11 // 1506
-	COPY $infoURL r12 // 1510
-	LOAD r11 "infoURL" // 1513
-	PUT r12 r10 r11 // 1524
-	COPY $imageURL r12 // 1528
-	LOAD r11 "imageURL" // 1531
-	PUT r12 r10 r11 // 1543
-	COPY r10 $rom // 1547
-// Line 105:        local ram:body_ram = Struct.body_ram("SANDY");//template name for now
-	ALIAS r10 $ram // 1550
-	CLEAR r11 // 1550
-	ALIAS r13 $literalexpression303 // 1552
-	LOAD $literalexpression303 "SANDY" // 1552
-	LOAD r12 "name" // 1561
-	PUT $literalexpression303 r11 r12 // 1569
-	COPY r11 $ram // 1573
-// Line 106:        if(this.checkTimeGate()){
-	ALIAS r11 $methodcallexpression307 // 1576
-	CALL @entry_checkTimeGate // 1576
-	POP $methodcallexpression307 // 1580
-		JMPNOT $methodcallexpression307 @else_ifstatement306 // 1582
-// Line 107:
-// Line 108:            Runtime.expect(owns_sandy.has(to) == false,"Cannot purchase due to you already owning a SANDY");
-		LOAD r12 6 // field type // 1586
-		PUSH r12 // 1591
-		COPY $to r13 // 1593
-		PUSH r13 // 1596
-		ALIAS r13 $literalexpression329 // 1598
-		LOAD $literalexpression329 "owns_sandy" // 1598
-		PUSH $literalexpression329 // 1612
-		LOAD $literalexpression329 "SANDY" // contract name // 1614
-		PUSH $literalexpression329 // 1623
-		LOAD r12 "Map.Has" // 1625
-		EXTCALL r12 // 1636
-		POP r12 // 1638
-		ALIAS r13 $literalexpression331 // 1640
-		LOAD $literalexpression331 false // 1640
-		EQUAL r12 $literalexpression331 r14 // 1645
-		JMPIF r14 @expect_methodcallexpression310 // 1649
-		ALIAS r12 $literalexpression333 // 1653
-		LOAD $literalexpression333 "Cannot purchase due to you already owning a SANDY" // 1653
-		THROW $literalexpression333 // 1706
-		@expect_methodcallexpression310: NOP // 1709
-// Line 109:            //need to find out how to get NFTID 
-// Line 110:            NFT.mint($THIS_ADDRESS, to, $THIS_SYMBOL, rom, ram, SANDY_SERIESID);//might change the series ID later
-		ALIAS r12 $methodcallexpression335 // 1709
-		ALIAS r13 $SANDY_SERIESID // 1709
-		LOAD $SANDY_SERIESID 1 // 1709
-		PUSH $SANDY_SERIESID // 1714
-		COPY $ram r13 // 1716
-		CAST r13 r13 #Bytes // 1719
-		PUSH r13 // 1723
-		COPY $rom r13 // 1725
-		CAST r13 r13 #Bytes // 1728
-		PUSH r13 // 1732
-		ALIAS r13 $literalexpression346 // 1734
-		LOAD $literalexpression346 "SANDY" // 1734
-		PUSH $literalexpression346 // 1743
-		COPY $to r13 // 1745
-		PUSH r13 // 1748
-		ALIAS r13 $literalexpression343 // 1750
-		LOAD $literalexpression343 0x0200DE439474EC46783F21573EFC03A9A014884D4499CC92D0DF1960CBD40DDAA503 // 1750
-		PUSH $literalexpression343 // 1788
-		EXTCALL "Address()" // 1790
-		POP $literalexpression343 // 1805
-		PUSH $literalexpression343 // 1807
-		LOAD $methodcallexpression335 "Runtime.MintToken" // 1809
-		EXTCALL $methodcallexpression335 // 1830
-		POP $methodcallexpression335 // 1832
-// Line 111:
-// Line 112:            //NFT.infuse(creator, $THIS_SYMBOL, id, _infusionTkn, _infusionAmt);
-// Line 113:            //assuming the minter is the to
-// Line 114:            owns_sandy.set(to,true);
-		ALIAS r12 $methodcallexpression351 // 1834
-		ALIAS r13 $literalexpression359 // 1834
-		LOAD $literalexpression359 true // 1834
-		PUSH $literalexpression359 // 1839
-		COPY $to r13 // 1841
-		PUSH r13 // 1844
-		ALIAS r13 $literalexpression357 // 1846
-		LOAD $literalexpression357 "owns_sandy" // 1846
-		PUSH $literalexpression357 // 1860
-		LOAD $methodcallexpression351 "Map.Set" // 1862
-		EXTCALL $methodcallexpression351 // 1873
-		JMP @then_ifstatement306 // 1875
-		@else_ifstatement306: NOP // 1879
-// Line 115:        }
-// Line 116:        else {
-// Line 117:
-// Line 118:        	NFT.mint($THIS_ADDRESS, to, $THIS_SYMBOL, rom, ram, SANDY_SERIESID);
-		ALIAS r12 $methodcallexpression362 // 1879
-		ALIAS r13 $SANDY_SERIESID // 1879
-		LOAD $SANDY_SERIESID 1 // 1879
-		PUSH $SANDY_SERIESID // 1884
-		COPY $ram r13 // 1886
-		CAST r13 r13 #Bytes // 1889
-		PUSH r13 // 1893
-		COPY $rom r13 // 1895
-		CAST r13 r13 #Bytes // 1898
-		PUSH r13 // 1902
-		ALIAS r13 $literalexpression373 // 1904
-		LOAD $literalexpression373 "SANDY" // 1904
-		PUSH $literalexpression373 // 1913
-		COPY $to r13 // 1915
-		PUSH r13 // 1918
-		ALIAS r13 $literalexpression370 // 1920
-		LOAD $literalexpression370 0x0200DE439474EC46783F21573EFC03A9A014884D4499CC92D0DF1960CBD40DDAA503 // 1920
-		PUSH $literalexpression370 // 1958
-		EXTCALL "Address()" // 1960
-		POP $literalexpression370 // 1975
-		PUSH $literalexpression370 // 1977
-		LOAD $methodcallexpression362 "Runtime.MintToken" // 1979
-		EXTCALL $methodcallexpression362 // 2000
-		POP $methodcallexpression362 // 2002
-		@then_ifstatement306: NOP // 2005
-@exit_mint: // 2005
-RET // 2006
-// Line 119:            //NFTID
-// Line 120:   
-// Line 121:           // NFT.infuse(creator, $THIS_SYMBOL, id, _infusionTkn, _infusionAmt);
-// Line 122:        }
-// Line 123:    } 
-
-// ********* timeGate_switch Method ***********
-@entry_timeGate_switch: // 2007
-ALIAS r1 $dataGet // 2008
-LOAD $dataGet "Data.Get" // 2008
-ALIAS r2 $contractName // 2020
-LOAD $contractName "SANDY" // 2020
-ALIAS r3 $owner // 2029
-// reading global: owner
-LOAD r0 8 // 2029
-PUSH r0 // 2034
-LOAD r0 "owner" // 2036
-PUSH r0 // 2045
-PUSH $contractName // 2047
-EXTCALL $dataGet // 2049
-POP $owner // 2051
-PUSH $owner // 2053
-EXTCALL "Address()" // 2055
-POP $owner // 2070
-ALIAS r4 $_timeGate // 2072
-// reading global: _timeGate
-LOAD r0 6 // 2072
-PUSH r0 // 2077
-LOAD r0 "_timeGate" // 2079
-PUSH r0 // 2092
-PUSH $contractName // 2094
-EXTCALL $dataGet // 2096
-POP $_timeGate // 2098
-// Line 124:    
-// Line 125:    
-// Line 126:    public timeGate_switch(){
-// Line 127:        Runtime.expect(Runtime.isWitness(owner),"witness failed");
-	ALIAS r1 $methodcallexpression383 // 2100
-	COPY $owner r2 // 2100
-	PUSH r2 // 2103
-	LOAD $methodcallexpression383 "Runtime.IsWitness" // 2105
-	EXTCALL $methodcallexpression383 // 2126
-	POP $methodcallexpression383 // 2128
-	JMPIF $methodcallexpression383 @expect_methodcallexpression380 // 2130
-	ALIAS r2 $literalexpression386 // 2134
-	LOAD $literalexpression386 "witness failed" // 2134
-	THROW $literalexpression386 // 2152
-	@expect_methodcallexpression380: NOP // 2155
-// Line 128:        _timeGate = !_timeGate; //assuming negation works in phantasma. This should just negate the value.
-	COPY $_timeGate r1 // 2155
-	NOT r1 r1 // 2158
-	COPY r1 $_timeGate // 2161
-@exit_timeGate_switch: // 2164
-LOAD r1 "Data.Set" // 2165
-// writing global: _timeGate
-PUSH $_timeGate // 2177
-LOAD r0 "_timeGate" // 2179
-PUSH r0 // 2192
-EXTCALL r1 // 2194
-RET // 2196
-// Line 129:    }
-
-// ********* mintToken Method ***********
-@entry_mintToken: // 2197
-// Line 130:
-// Line 131:
-// Line 132:	//@Param MintNum - keeps track of how many current mints there are. May need to find a correct way to implement this
-// Line 133:    public mintToken(creator:address,to:address,created:timestamp,dna: bytes,name: string,descritpion: string,infoURL: string,imageURL: string){
-ALIAS r1 $creator // 2198
-POP $creator // 2198
-PUSH $creator // 2200
-EXTCALL "Address()" // 2202
-POP $creator // 2217
-ALIAS r2 $to // 2219
-POP $to // 2219
-PUSH $to // 2221
-EXTCALL "Address()" // 2223
-POP $to // 2238
-ALIAS r3 $created // 2240
-POP $created // 2240
-PUSH $created // 2242
-EXTCALL "Timestamp()" // 2244
-POP $created // 2261
-ALIAS r4 $dna // 2263
-POP $dna // 2263
-ALIAS r5 $name // 2265
-POP $name // 2265
-ALIAS r6 $descritpion // 2267
-POP $descritpion // 2267
-ALIAS r7 $infoURL // 2269
-POP $infoURL // 2269
-ALIAS r8 $imageURL // 2271
-POP $imageURL // 2271
-// Line 134:        //Runtime.expect(Runtime.isWitness(creator),"Must own wallet you are minting from");
-// Line 135:        this.mint(creator,to,created,this.insertDNA(dna),name,descritpion,infoURL,imageURL);
-	ALIAS r9 $methodcallexpression409 // 2273
-	COPY $imageURL r10 // 2273
-	PUSH r10 // 2276
-	COPY $infoURL r10 // 2278
-	PUSH r10 // 2281
-	COPY $descritpion r10 // 2283
-	PUSH r10 // 2286
-	COPY $name r10 // 2288
-	PUSH r10 // 2291
-	ALIAS r10 $methodcallexpression421 // 2293
-	COPY $dna r11 // 2293
-	PUSH r11 // 2296
-	CALL @entry_insertDNA // 2298
-	POP $methodcallexpression421 // 2302
-	PUSH $methodcallexpression421 // 2304
-	COPY $created r10 // 2306
-	PUSH r10 // 2309
-	COPY $to r10 // 2311
-	PUSH r10 // 2314
-	COPY $creator r10 // 2316
-	PUSH r10 // 2319
-	CALL @entry_mint // 2321
-@exit_mintToken: // 2325
-RET // 2326
-// Line 136:    
-// Line 137:    }
+PUSH $_infusionTkn // 1388
+LOAD r0 "_infusionTkn" // 1390
+PUSH r0 // 1406
+EXTCALL r4 // 1408
+RET // 1410
+// Line 118:    }
 
 // ********* transerNFT Method ***********
-@entry_transerNFT: // 2327
-// Line 138:    public transerNFT(from:address,to:address,id:number){
-ALIAS r1 $from // 2328
-POP $from // 2328
-PUSH $from // 2330
-EXTCALL "Address()" // 2332
-POP $from // 2347
-ALIAS r2 $to // 2349
-POP $to // 2349
-PUSH $to // 2351
-EXTCALL "Address()" // 2353
-POP $to // 2368
-ALIAS r3 $id // 2370
-POP $id // 2370
-CAST $id $id #Number // 2372
-// Line 139:        Runtime.expect(Runtime.isWitness(from),"Must be owner of NFT to Transfer");
-	ALIAS r4 $methodcallexpression440 // 2376
-	COPY $from r5 // 2376
-	PUSH r5 // 2379
-	LOAD $methodcallexpression440 "Runtime.IsWitness" // 2381
-	EXTCALL $methodcallexpression440 // 2402
-	POP $methodcallexpression440 // 2404
-	JMPIF $methodcallexpression440 @expect_methodcallexpression437 // 2406
-	ALIAS r5 $literalexpression443 // 2410
-	LOAD $literalexpression443 "Must be owner of NFT to Transfer" // 2410
-	THROW $literalexpression443 // 2446
-	@expect_methodcallexpression437: NOP // 2449
-// Line 140:        NFT.transfer(from,to,$THIS_SYMBOL,id);
-	ALIAS r4 $methodcallexpression445 // 2449
-	COPY $id r5 // 2449
-	PUSH r5 // 2452
-	ALIAS r5 $literalexpression453 // 2454
-	LOAD $literalexpression453 "SANDY" // 2454
-	PUSH $literalexpression453 // 2463
-	COPY $to r5 // 2465
-	PUSH r5 // 2468
-	COPY $from r5 // 2470
-	PUSH r5 // 2473
-	LOAD $methodcallexpression445 "Runtime.TransferToken" // 2475
-	EXTCALL $methodcallexpression445 // 2500
-@exit_transerNFT: // 2502
-RET // 2503
-// Line 141:
+@entry_transerNFT: // 1411
+// Line 119:   
+// Line 120:     public transerNFT(from:address,to:address,id:number){
+ALIAS r1 $from // 1412
+POP $from // 1412
+PUSH $from // 1414
+EXTCALL "Address()" // 1416
+POP $from // 1431
+ALIAS r2 $to // 1433
+POP $to // 1433
+PUSH $to // 1435
+EXTCALL "Address()" // 1437
+POP $to // 1452
+ALIAS r3 $id // 1454
+POP $id // 1454
+CAST $id $id #Number // 1456
+// Line 121:        Runtime.expect(Runtime.isWitness(from),"Must be owner of NFT to Transfer");
+	ALIAS r4 $methodcallexpression405 // 1460
+	COPY $from r5 // 1460
+	PUSH r5 // 1463
+	LOAD $methodcallexpression405 "Runtime.IsWitness" // 1465
+	EXTCALL $methodcallexpression405 // 1486
+	POP $methodcallexpression405 // 1488
+	JMPIF $methodcallexpression405 @expect_methodcallexpression402 // 1490
+	ALIAS r5 $literalexpression408 // 1494
+	LOAD $literalexpression408 "Must be owner of NFT to Transfer" // 1494
+	THROW $literalexpression408 // 1530
+	@expect_methodcallexpression402: NOP // 1533
+// Line 122:        NFT.transfer(from,to,$THIS_SYMBOL,id);
+	ALIAS r4 $methodcallexpression410 // 1533
+	COPY $id r5 // 1533
+	PUSH r5 // 1536
+	ALIAS r5 $literalexpression418 // 1538
+	LOAD $literalexpression418 "SANDY" // 1538
+	PUSH $literalexpression418 // 1547
+	COPY $to r5 // 1549
+	PUSH r5 // 1552
+	COPY $from r5 // 1554
+	PUSH r5 // 1557
+	LOAD $methodcallexpression410 "Runtime.TransferToken" // 1559
+	EXTCALL $methodcallexpression410 // 1584
+@exit_transerNFT: // 1586
+RET // 1587
+// Line 123:    }
+
+// ********* mintBody Method ***********
+@entry_mintBody: // 1588
+ALIAS r1 $dataGet // 1589
+LOAD $dataGet "Data.Get" // 1589
+ALIAS r2 $contractName // 1601
+LOAD $contractName "SANDY" // 1601
+ALIAS r3 $owner // 1610
+// reading global: owner
+LOAD r0 8 // 1610
+PUSH r0 // 1615
+LOAD r0 "owner" // 1617
+PUSH r0 // 1626
+PUSH $contractName // 1628
+EXTCALL $dataGet // 1630
+POP $owner // 1632
+PUSH $owner // 1634
+EXTCALL "Address()" // 1636
+POP $owner // 1651
+ALIAS r4 $_infusionAmt // 1653
+// reading global: _infusionAmt
+LOAD r0 3 // 1653
+PUSH r0 // 1658
+LOAD r0 "_infusionAmt" // 1660
+PUSH r0 // 1676
+PUSH $contractName // 1678
+EXTCALL $dataGet // 1680
+POP $_infusionAmt // 1682
+ALIAS r5 $_infusionTkn // 1684
+// reading global: _infusionTkn
+LOAD r0 4 // 1684
+PUSH r0 // 1689
+LOAD r0 "_infusionTkn" // 1691
+PUSH r0 // 1707
+PUSH $contractName // 1709
+EXTCALL $dataGet // 1711
+POP $_infusionTkn // 1713
+// Line 124:
+// Line 125:    public mintBody(to:address,created:timestamp,name:string,description: string,infoURL: string,imageURL: string,sandType: string, skinType: string) 
+ALIAS r1 $to // 1715
+POP $to // 1715
+PUSH $to // 1717
+EXTCALL "Address()" // 1719
+POP $to // 1734
+ALIAS r2 $created // 1736
+POP $created // 1736
+PUSH $created // 1738
+EXTCALL "Timestamp()" // 1740
+POP $created // 1757
+ALIAS r6 $name // 1759
+POP $name // 1759
+ALIAS r7 $description // 1761
+POP $description // 1761
+ALIAS r8 $infoURL // 1763
+POP $infoURL // 1763
+ALIAS r9 $imageURL // 1765
+POP $imageURL // 1765
+ALIAS r10 $sandType // 1767
+POP $sandType // 1767
+ALIAS r11 $skinType // 1769
+POP $skinType // 1769
+// Line 126:    {
+// Line 127:        Runtime.expect(owns_sandy.has(to) == false,"Cannot purchase due to you already owning a SANDY"); 
+	LOAD r12 6 // field type // 1771
+	PUSH r12 // 1776
+	COPY $to r13 // 1778
+	PUSH r13 // 1781
+	ALIAS r13 $literalexpression458 // 1783
+	LOAD $literalexpression458 "owns_sandy" // 1783
+	PUSH $literalexpression458 // 1797
+	LOAD $literalexpression458 "SANDY" // contract name // 1799
+	PUSH $literalexpression458 // 1808
+	LOAD r12 "Map.Has" // 1810
+	EXTCALL r12 // 1821
+	POP r12 // 1823
+	ALIAS r13 $literalexpression460 // 1825
+	LOAD $literalexpression460 false // 1825
+	EQUAL r12 $literalexpression460 r14 // 1830
+	JMPIF r14 @expect_methodcallexpression439 // 1834
+	ALIAS r12 $literalexpression462 // 1838
+	LOAD $literalexpression462 "Cannot purchase due to you already owning a SANDY" // 1838
+	THROW $literalexpression462 // 1891
+	@expect_methodcallexpression439: NOP // 1894
+// Line 128:        Runtime.expect(Runtime.isWitness(to),"Must be witness");
+	ALIAS r12 $methodcallexpression467 // 1894
+	COPY $to r13 // 1894
+	PUSH r13 // 1897
+	LOAD $methodcallexpression467 "Runtime.IsWitness" // 1899
+	EXTCALL $methodcallexpression467 // 1920
+	POP $methodcallexpression467 // 1922
+	JMPIF $methodcallexpression467 @expect_methodcallexpression464 // 1924
+	ALIAS r13 $literalexpression470 // 1928
+	LOAD $literalexpression470 "Must be witness" // 1928
+	THROW $literalexpression470 // 1947
+	@expect_methodcallexpression464: NOP // 1950
+// Line 129:		local rom:body_rom = Struct.body_rom(Time.now(),name,description,infoURL,imageURL,sandType,skinType);
+	ALIAS r12 $rom // 1950
+	CLEAR r13 // 1950
+	ALIAS r15 $methodcallexpression479 // 1952
+	LOAD $methodcallexpression479 "Runtime.Time" // 1952
+	EXTCALL $methodcallexpression479 // 1968
+	POP $methodcallexpression479 // 1970
+	LOAD r14 "created" // 1972
+	PUT $methodcallexpression479 r13 r14 // 1983
+	COPY $name r15 // 1987
+	LOAD r14 "name" // 1990
+	PUT r15 r13 r14 // 1998
+	COPY $description r15 // 2002
+	LOAD r14 "description" // 2005
+	PUT r15 r13 r14 // 2020
+	COPY $infoURL r15 // 2024
+	LOAD r14 "infoURL" // 2027
+	PUT r15 r13 r14 // 2038
+	COPY $imageURL r15 // 2042
+	LOAD r14 "imageURL" // 2045
+	PUT r15 r13 r14 // 2057
+	COPY $sandType r15 // 2061
+	LOAD r14 "sandType" // 2064
+	PUT r15 r13 r14 // 2076
+	COPY $skinType r15 // 2080
+	LOAD r14 "skinType" // 2083
+	PUT r15 r13 r14 // 2095
+	COPY r13 $rom // 2099
+// Line 130:        //local ram:body_ram = Struct.body_ram("SANDY");//template name for now
+// Line 131:          
+// Line 132:            /* Test Can I infust once i Mint to another Address?? Needs to be Tested*/
+// Line 133:        local id = NFT.mint(owner,owner, $THIS_SYMBOL, rom,"", SANDY_SERIESID);
+	ALIAS r13 $id // 2102
+	ALIAS r14 $methodcallexpression488 // 2102
+	ALIAS r15 $SANDY_SERIESID // 2102
+	LOAD $SANDY_SERIESID 1 // 2102
+	PUSH $SANDY_SERIESID // 2107
+	ALIAS r15 $literalexpression500 // 2109
+	LOAD $literalexpression500 "" // 2109
+	CAST $literalexpression500 $literalexpression500 #Bytes // 2113
+	PUSH $literalexpression500 // 2117
+	COPY $rom r15 // 2119
+	CAST r15 r15 #Bytes // 2122
+	PUSH r15 // 2126
+	ALIAS r15 $literalexpression498 // 2128
+	LOAD $literalexpression498 "SANDY" // 2128
+	PUSH $literalexpression498 // 2137
+	COPY $owner r15 // 2139
+	PUSH r15 // 2142
+	COPY $owner r15 // 2144
+	PUSH r15 // 2147
+	LOAD $methodcallexpression488 "Runtime.MintToken" // 2149
+	EXTCALL $methodcallexpression488 // 2170
+	POP $methodcallexpression488 // 2172
+	COPY $methodcallexpression488 $id // 2174
+// Line 134:        NFT.infuse(owner, $THIS_SYMBOL, id, _infusionTkn, _infusionAmt);
+	ALIAS r14 $methodcallexpression505 // 2177
+	COPY $_infusionAmt r15 // 2177
+	PUSH r15 // 2180
+	COPY $_infusionTkn r15 // 2182
+	PUSH r15 // 2185
+	COPY $id r15 // 2187
+	PUSH r15 // 2190
+	ALIAS r15 $literalexpression513 // 2192
+	LOAD $literalexpression513 "SANDY" // 2192
+	PUSH $literalexpression513 // 2201
+	COPY $owner r15 // 2203
+	PUSH r15 // 2206
+	LOAD $methodcallexpression505 "Runtime.InfuseToken" // 2208
+	EXTCALL $methodcallexpression505 // 2231
+// Line 135:        this.transerNFT(owner,to,id);
+	ALIAS r14 $methodcallexpression518 // 2233
+	COPY $id r15 // 2233
+	PUSH r15 // 2236
+	COPY $to r15 // 2238
+	PUSH r15 // 2241
+	COPY $owner r15 // 2243
+	PUSH r15 // 2246
+	CALL @entry_transerNFT // 2248
+// Line 136:        owns_sandy.set(to,true);
+	ALIAS r14 $methodcallexpression526 // 2252
+	ALIAS r15 $literalexpression534 // 2252
+	LOAD $literalexpression534 true // 2252
+	PUSH $literalexpression534 // 2257
+	COPY $to r15 // 2259
+	PUSH r15 // 2262
+	ALIAS r15 $literalexpression532 // 2264
+	LOAD $literalexpression532 "owns_sandy" // 2264
+	PUSH $literalexpression532 // 2278
+	LOAD $methodcallexpression526 "Map.Set" // 2280
+	EXTCALL $methodcallexpression526 // 2291
+@exit_mintBody: // 2293
+RET // 2294
+// Line 137:    } 
+
+// ********* initMint Method ***********
+@entry_initMint: // 2295
+ALIAS r1 $dataGet // 2296
+LOAD $dataGet "Data.Get" // 2296
+ALIAS r2 $contractName // 2308
+LOAD $contractName "SANDY" // 2308
+ALIAS r3 $owner // 2317
+// reading global: owner
+LOAD r0 8 // 2317
+PUSH r0 // 2322
+LOAD r0 "owner" // 2324
+PUSH r0 // 2333
+PUSH $contractName // 2335
+EXTCALL $dataGet // 2337
+POP $owner // 2339
+PUSH $owner // 2341
+EXTCALL "Address()" // 2343
+POP $owner // 2358
+// Line 138:    
+// Line 139:     private initMint(seriesID:number,name: string,description: string,infoURL: string,imageURL: string){
+ALIAS r1 $seriesID // 2360
+POP $seriesID // 2360
+CAST $seriesID $seriesID #Number // 2362
+ALIAS r2 $name // 2366
+POP $name // 2366
+ALIAS r4 $description // 2368
+POP $description // 2368
+ALIAS r5 $infoURL // 2370
+POP $infoURL // 2370
+ALIAS r6 $imageURL // 2372
+POP $imageURL // 2372
+// Line 140:        local rom:limb_rom = Struct.limb_rom(name,description,infoURL,imageURL);
+	ALIAS r7 $rom // 2374
+	CLEAR r8 // 2374
+	COPY $name r10 // 2376
+	LOAD r9 "name" // 2379
+	PUT r10 r8 r9 // 2387
+	COPY $description r10 // 2391
+	LOAD r9 "description" // 2394
+	PUT r10 r8 r9 // 2409
+	COPY $infoURL r10 // 2413
+	LOAD r9 "infoURL" // 2416
+	PUT r10 r8 r9 // 2427
+	COPY $imageURL r10 // 2431
+	LOAD r9 "imageURL" // 2434
+	PUT r10 r8 r9 // 2446
+	COPY r8 $rom // 2450
+// Line 141:        local id: number = NFT.mint(owner,owner, $THIS_SYMBOL, rom,"",seriesID);
+	ALIAS r8 $id // 2453
+	ALIAS r9 $methodcallexpression558 // 2453
+	COPY $seriesID r10 // 2453
+	PUSH r10 // 2456
+	ALIAS r10 $literalexpression570 // 2458
+	LOAD $literalexpression570 "" // 2458
+	CAST $literalexpression570 $literalexpression570 #Bytes // 2462
+	PUSH $literalexpression570 // 2466
+	COPY $rom r10 // 2468
+	CAST r10 r10 #Bytes // 2471
+	PUSH r10 // 2475
+	ALIAS r10 $literalexpression568 // 2477
+	LOAD $literalexpression568 "SANDY" // 2477
+	PUSH $literalexpression568 // 2486
+	COPY $owner r10 // 2488
+	PUSH r10 // 2491
+	COPY $owner r10 // 2493
+	PUSH r10 // 2496
+	LOAD $methodcallexpression558 "Runtime.MintToken" // 2498
+	EXTCALL $methodcallexpression558 // 2519
+	POP $methodcallexpression558 // 2521
+	COPY $methodcallexpression558 $id // 2523
+@exit_initMint: // 2526
+RET // 2527
 // Line 142:    }
 
-// ********* editSANDY Method ***********
-@entry_editSANDY: // 2504
-// Line 143:
-// Line 144:	//will have to make sure that the owner is the only one who can edit the sandy name
-// Line 145:    public editSANDY(nftOwner:address,tokenID:number,name:string){
-ALIAS r1 $nftOwner // 2505
-POP $nftOwner // 2505
-PUSH $nftOwner // 2507
-EXTCALL "Address()" // 2509
-POP $nftOwner // 2524
-ALIAS r2 $tokenID // 2526
-POP $tokenID // 2526
-CAST $tokenID $tokenID #Number // 2528
-ALIAS r3 $name // 2532
-POP $name // 2532
-// Line 146:        Runtime.expect(Runtime.isWitness(nftOwner),"Must be owner of NFT");//have to find a way to get current nft owner
-	ALIAS r4 $methodcallexpression467 // 2534
-	COPY $nftOwner r5 // 2534
-	PUSH r5 // 2537
-	LOAD $methodcallexpression467 "Runtime.IsWitness" // 2539
-	EXTCALL $methodcallexpression467 // 2560
-	POP $methodcallexpression467 // 2562
-	JMPIF $methodcallexpression467 @expect_methodcallexpression464 // 2564
-	ALIAS r5 $literalexpression470 // 2568
-	LOAD $literalexpression470 "Must be owner of NFT" // 2568
-	THROW $literalexpression470 // 2592
-	@expect_methodcallexpression464: NOP // 2595
-// Line 147:		local editRam:body_ram = Struct.body_ram(name);
-	ALIAS r4 $editRam // 2595
-	CLEAR r5 // 2595
-	COPY $name r7 // 2597
-	LOAD r6 "name" // 2600
-	PUT r7 r5 r6 // 2608
-	COPY r5 $editRam // 2612
-// Line 148:		//my assumption that write must follow the order of the struct 
-// Line 149:        NFT.write(nftOwner,$THIS_SYMBOL,tokenID,editRam);//changeable data
-	ALIAS r5 $methodcallexpression477 // 2615
-	COPY $editRam r6 // 2615
-	CAST r6 r6 #Bytes // 2618
-	PUSH r6 // 2622
-	COPY $tokenID r6 // 2624
-	PUSH r6 // 2627
-	ALIAS r6 $literalexpression484 // 2629
-	LOAD $literalexpression484 "SANDY" // 2629
-	PUSH $literalexpression484 // 2638
-	COPY $nftOwner r6 // 2640
-	PUSH r6 // 2643
-	LOAD $methodcallexpression477 "Runtime.WriteToken" // 2645
-	EXTCALL $methodcallexpression477 // 2667
-@exit_editSANDY: // 2669
-RET // 2670
-// Line 150:
-// Line 151:
-// Line 152:    }
+// ********* createLimb Method ***********
+@entry_createLimb: // 2528
+ALIAS r1 $dataGet // 2529
+LOAD $dataGet "Data.Get" // 2529
+ALIAS r2 $contractName // 2541
+LOAD $contractName "SANDY" // 2541
+ALIAS r3 $owner // 2550
+// reading global: owner
+LOAD r0 8 // 2550
+PUSH r0 // 2555
+LOAD r0 "owner" // 2557
+PUSH r0 // 2566
+PUSH $contractName // 2568
+EXTCALL $dataGet // 2570
+POP $owner // 2572
+PUSH $owner // 2574
+EXTCALL "Address()" // 2576
+POP $owner // 2591
+// Line 143:  
+// Line 144:	//@Param seriesId - Must be a unique number, could use UID.generate()
+// Line 145:    public createLimb(seriesID:number,limbSupply:number,name: string,description: string,infoURL: string,imageURL: string){
+ALIAS r1 $seriesID // 2593
+POP $seriesID // 2593
+CAST $seriesID $seriesID #Number // 2595
+ALIAS r2 $limbSupply // 2599
+POP $limbSupply // 2599
+CAST $limbSupply $limbSupply #Number // 2601
+ALIAS r4 $name // 2605
+POP $name // 2605
+ALIAS r5 $description // 2607
+POP $description // 2607
+ALIAS r6 $infoURL // 2609
+POP $infoURL // 2609
+ALIAS r7 $imageURL // 2611
+POP $imageURL // 2611
+// Line 146:        Runtime.expect(Runtime.isWitness(owner),"Must be owner of contract");
+	ALIAS r8 $methodcallexpression592 // 2613
+	COPY $owner r9 // 2613
+	PUSH r9 // 2616
+	LOAD $methodcallexpression592 "Runtime.IsWitness" // 2618
+	EXTCALL $methodcallexpression592 // 2639
+	POP $methodcallexpression592 // 2641
+	JMPIF $methodcallexpression592 @expect_methodcallexpression589 // 2643
+	ALIAS r9 $literalexpression595 // 2647
+	LOAD $literalexpression595 "Must be owner of contract" // 2647
+	THROW $literalexpression595 // 2676
+	@expect_methodcallexpression589: NOP // 2679
+// Line 147:        NFT.createSeries(owner, $THIS_SYMBOL,seriesID,limbSupply,TokenSeries.Duplicated,limb);
+	ALIAS r8 $methodcallexpression597 // 2679
+	LOAD r9 0x04076765744E616D6504000000000107746F6B656E4944030E6765744465736372697074696F6E04590000000107746F6B656E4944030A676574496E666F55524C04B90000000107746F6B656E4944030B676574496D61676555524C04150100000107746F6B656E49440300 // abi // 2679
+	PUSH r9 // 2791
+	LOAD r9 0x0004010D000403524F4D030003010D00040553414E445903000D00041152756E74696D652E52656164546F6B656E070004023202020D000403524F4D300203003203030203010D0204046E616D65300101020301085800000B0004010D000403524F4D030003010D00040553414E445903000D00041152756E74696D652E52656164546F6B656E070004023202020D000403524F4D300203003203030203010D02040B6465736372697074696F6E30010102030108B800000B0004010D000403524F4D030003010D00040553414E445903000D00041152756E74696D652E52656164546F6B656E070004023202020D000403524F4D300203003203030203010D020407696E666F55524C300101020301081401000B0004010D000403524F4D030003010D00040553414E445903000D00041152756E74696D652E52656164546F6B656E070004023202020D000403524F4D300203003203030203010D020408696D61676555524C300101020301087101000B // script // 2793
+	PUSH r9 // 3169
+	ALIAS r9 $literalexpression609 // 3171
+	LOAD $literalexpression609 1 Enum // 3171
+	PUSH $literalexpression609 // 3179
+	COPY $limbSupply r9 // 3181
+	PUSH r9 // 3184
+	COPY $seriesID r9 // 3186
+	PUSH r9 // 3189
+	ALIAS r9 $literalexpression606 // 3191
+	LOAD $literalexpression606 "SANDY" // 3191
+	PUSH $literalexpression606 // 3200
+	COPY $owner r9 // 3202
+	PUSH r9 // 3205
+	LOAD $methodcallexpression597 "Nexus.CreateTokenSeries" // 3207
+	EXTCALL $methodcallexpression597 // 3234
+// Line 148:        local rom:limb_rom = Struct.limb_rom(name,description,infoURL,imageURL);
+	ALIAS r8 $rom // 3236
+	CLEAR r9 // 3236
+	COPY $name r11 // 3238
+	LOAD r10 "name" // 3241
+	PUT r11 r9 r10 // 3249
+	COPY $description r11 // 3253
+	LOAD r10 "description" // 3256
+	PUT r11 r9 r10 // 3271
+	COPY $infoURL r11 // 3275
+	LOAD r10 "infoURL" // 3278
+	PUT r11 r9 r10 // 3289
+	COPY $imageURL r11 // 3293
+	LOAD r10 "imageURL" // 3296
+	PUT r11 r9 r10 // 3308
+	COPY r9 $rom // 3312
+// Line 149:        this.initMint(seriesID,name,description,infoURL,imageURL);
+	ALIAS r9 $methodcallexpression623 // 3315
+	COPY $imageURL r10 // 3315
+	PUSH r10 // 3318
+	COPY $infoURL r10 // 3320
+	PUSH r10 // 3323
+	COPY $description r10 // 3325
+	PUSH r10 // 3328
+	COPY $name r10 // 3330
+	PUSH r10 // 3333
+	COPY $seriesID r10 // 3335
+	PUSH r10 // 3338
+	CALL @entry_initMint // 3340
+@exit_createLimb: // 3344
+RET // 3345
+// Line 150:    }
 
-// ********* getRom Method ***********
-@entry_getRom: // 2671
-// Line 153:    //need to get readable rom 
-// Line 154:    
-// Line 155:    //- How do I make return type a struct initiialized to the rom size
-// Line 156:    public getRom(symbol:string, id:number):body_rom {
-ALIAS r1 $symbol // 2672
-POP $symbol // 2672
-ALIAS r2 $id // 2674
-POP $id // 2674
-CAST $id $id #Number // 2676
-// Line 157:         local nftROM:body_rom = NFT.readROM<body_rom>($THIS_SYMBOL, id);
-	ALIAS r3 $nftROM // 2680
-	ALIAS r4 $methodcallexpression493 // 2680
-	COPY $id r5 // 2680
-	PUSH r5 // 2683
-	ALIAS r5 $literalexpression497 // 2685
-	LOAD $literalexpression497 "SANDY" // 2685
-	PUSH $literalexpression497 // 2694
-	LOAD $methodcallexpression493 "Runtime.ReadTokenROM" // 2696
-	EXTCALL $methodcallexpression493 // 2720
-	POP $methodcallexpression493 // 2722
-	UNPACK $methodcallexpression493 $methodcallexpression493 // 2724
-	COPY $methodcallexpression493 $nftROM // 2727
-// Line 158:         
-// Line 159:         return nftROM;
-	COPY $nftROM r4 // 2730
-	PUSH r4 // 2733
-	JMP @exit_getRom // 2735
-@exit_getRom: // 2738
-RET // 2739
+// ********* mintLimb Method ***********
+@entry_mintLimb: // 3346
+// Line 151:
+// Line 152:   
+// Line 153:    //should give you a random limb back
+// Line 154:    public mintLimb(from:address,to:address,seriesID:number)
+ALIAS r1 $from // 3347
+POP $from // 3347
+PUSH $from // 3349
+EXTCALL "Address()" // 3351
+POP $from // 3366
+ALIAS r2 $to // 3368
+POP $to // 3368
+PUSH $to // 3370
+EXTCALL "Address()" // 3372
+POP $to // 3387
+ALIAS r3 $seriesID // 3389
+POP $seriesID // 3389
+CAST $seriesID $seriesID #Number // 3391
+// Line 155:    {   
+// Line 156:        Runtime.expect(Runtime.isWitness(from),"Must be a witness");
+	ALIAS r4 $methodcallexpression646 // 3395
+	COPY $from r5 // 3395
+	PUSH r5 // 3398
+	LOAD $methodcallexpression646 "Runtime.IsWitness" // 3400
+	EXTCALL $methodcallexpression646 // 3421
+	POP $methodcallexpression646 // 3423
+	JMPIF $methodcallexpression646 @expect_methodcallexpression643 // 3425
+	ALIAS r5 $literalexpression649 // 3429
+	LOAD $literalexpression649 "Must be a witness" // 3429
+	THROW $literalexpression649 // 3450
+	@expect_methodcallexpression643: NOP // 3453
+// Line 157:        //need to randomize seriesId -> this is assuming all I need is a seriesID.
+// Line 158:        //do randomization for SeriesID;
+// Line 159:        local id: number = NFT.mint(from,to, $THIS_SYMBOL,"","",seriesID);
+	ALIAS r4 $id // 3453
+	ALIAS r5 $methodcallexpression650 // 3453
+	COPY $seriesID r6 // 3453
+	PUSH r6 // 3456
+	ALIAS r6 $literalexpression662 // 3458
+	LOAD $literalexpression662 "" // 3458
+	CAST $literalexpression662 $literalexpression662 #Bytes // 3462
+	PUSH $literalexpression662 // 3466
+	ALIAS r6 $literalexpression661 // 3468
+	LOAD $literalexpression661 "" // 3468
+	CAST $literalexpression661 $literalexpression661 #Bytes // 3472
+	PUSH $literalexpression661 // 3476
+	ALIAS r6 $literalexpression660 // 3478
+	LOAD $literalexpression660 "SANDY" // 3478
+	PUSH $literalexpression660 // 3487
+	COPY $to r6 // 3489
+	PUSH r6 // 3492
+	COPY $from r6 // 3494
+	PUSH r6 // 3497
+	LOAD $methodcallexpression650 "Runtime.MintToken" // 3499
+	EXTCALL $methodcallexpression650 // 3520
+	POP $methodcallexpression650 // 3522
+	COPY $methodcallexpression650 $id // 3524
+@exit_mintLimb: // 3527
+RET // 3528
 // Line 160:    }
 
-// ********* getRam Method ***********
-@entry_getRam: // 2740
+// ********* editSANDY Method ***********
+@entry_editSANDY: // 3529
 // Line 161:
-// Line 162:    public getRam(symbol:string, id:number): body_ram
-ALIAS r1 $symbol // 2741
-POP $symbol // 2741
-ALIAS r2 $id // 2743
-POP $id // 2743
-CAST $id $id #Number // 2745
-// Line 163:    {
-// Line 164:        local nftRAM:body_ram = NFT.readRAM<body_ram>($THIS_SYMBOL, id);
-	ALIAS r3 $nftRAM // 2749
-	ALIAS r4 $methodcallexpression509 // 2749
-	COPY $id r5 // 2749
-	PUSH r5 // 2752
-	ALIAS r5 $literalexpression513 // 2754
-	LOAD $literalexpression513 "SANDY" // 2754
-	PUSH $literalexpression513 // 2763
-	LOAD $methodcallexpression509 "Runtime.ReadTokenRAM" // 2765
-	EXTCALL $methodcallexpression509 // 2789
-	POP $methodcallexpression509 // 2791
-	UNPACK $methodcallexpression509 $methodcallexpression509 // 2793
-	COPY $methodcallexpression509 $nftRAM // 2796
-// Line 165:        return nftRAM;
-	COPY $nftRAM r4 // 2799
-	PUSH r4 // 2802
-	JMP @exit_getRam // 2804
-@exit_getRam: // 2807
-RET // 2808
-// Line 166:    }
+// Line 162:    
+// Line 163:
+// Line 164:    //Will deprecated and used for somthing else
+// Line 165:	//will have to make sure that the owner is the only one who can edit the sandy name
+// Line 166:    public editSANDY(nftOwner:address,tokenID:number,name:string){
+ALIAS r1 $nftOwner // 3530
+POP $nftOwner // 3530
+PUSH $nftOwner // 3532
+EXTCALL "Address()" // 3534
+POP $nftOwner // 3549
+ALIAS r2 $tokenID // 3551
+POP $tokenID // 3551
+CAST $tokenID $tokenID #Number // 3553
+ALIAS r3 $name // 3557
+POP $name // 3557
+// Line 167:        Runtime.expect(Runtime.isWitness(nftOwner),"Must be owner of NFT");//have to find a way to get current nft owner
+	ALIAS r4 $methodcallexpression678 // 3559
+	COPY $nftOwner r5 // 3559
+	PUSH r5 // 3562
+	LOAD $methodcallexpression678 "Runtime.IsWitness" // 3564
+	EXTCALL $methodcallexpression678 // 3585
+	POP $methodcallexpression678 // 3587
+	JMPIF $methodcallexpression678 @expect_methodcallexpression675 // 3589
+	ALIAS r5 $literalexpression681 // 3593
+	LOAD $literalexpression681 "Must be owner of NFT" // 3593
+	THROW $literalexpression681 // 3617
+	@expect_methodcallexpression675: NOP // 3620
+// Line 168:		local editRam:body_ram = Struct.body_ram();
+	ALIAS r4 $editRam // 3620
+	CLEAR r5 // 3620
+	COPY r5 $editRam // 3622
+// Line 169:		//my assumption that write must follow the order of the struct 
+// Line 170:        NFT.write(nftOwner,$THIS_SYMBOL,tokenID,editRam);//changeable data
+	ALIAS r5 $methodcallexpression686 // 3625
+	COPY $editRam r6 // 3625
+	CAST r6 r6 #Bytes // 3628
+	PUSH r6 // 3632
+	COPY $tokenID r6 // 3634
+	PUSH r6 // 3637
+	ALIAS r6 $literalexpression693 // 3639
+	LOAD $literalexpression693 "SANDY" // 3639
+	PUSH $literalexpression693 // 3648
+	COPY $nftOwner r6 // 3650
+	PUSH r6 // 3653
+	LOAD $methodcallexpression686 "Runtime.WriteToken" // 3655
+	EXTCALL $methodcallexpression686 // 3677
+@exit_editSANDY: // 3679
+RET // 3680
+// Line 171:
+// Line 172:
+// Line 173:    }
 
-// ********* onUpgrade Trigger ***********
-@entry_onUpgrade: // 2809
-ALIAS r1 $dataGet // 2810
-LOAD $dataGet "Data.Get" // 2810
-ALIAS r2 $contractName // 2822
-LOAD $contractName "SANDY" // 2822
-ALIAS r3 $owner // 2831
-// reading global: owner
-LOAD r0 8 // 2831
-PUSH r0 // 2836
-LOAD r0 "owner" // 2838
-PUSH r0 // 2847
-PUSH $contractName // 2849
-EXTCALL $dataGet // 2851
-POP $owner // 2853
-PUSH $owner // 2855
-EXTCALL "Address()" // 2857
-POP $owner // 2872
-// Line 167:
-// Line 168:    trigger onUpgrade(from:address)
-ALIAS r1 $from // 2874
-POP $from // 2874
-PUSH $from // 2876
-EXTCALL "Address()" // 2878
-POP $from // 2893
-// Line 169:    {
-// Line 170:        // check is witness and is current owner
-// Line 171:		Runtime.expect(Runtime.isWitness(owner), "invalid witness");
-	ALIAS r2 $methodcallexpression527 // 2895
-	COPY $owner r4 // 2895
-	PUSH r4 // 2898
-	LOAD $methodcallexpression527 "Runtime.IsWitness" // 2900
-	EXTCALL $methodcallexpression527 // 2921
-	POP $methodcallexpression527 // 2923
-	JMPIF $methodcallexpression527 @expect_methodcallexpression524 // 2925
-	ALIAS r4 $literalexpression530 // 2929
-	LOAD $literalexpression530 "invalid witness" // 2929
-	THROW $literalexpression530 // 2948
-	@expect_methodcallexpression524: NOP // 2951
-@exit_onUpgrade: // 2951
-RET // 2952
-// Line 172:    }
-
-// ********* onMint Trigger ***********
-@entry_onMint: // 2953
-// Line 173:    //Mint function
-// Line 174:    trigger onMint(from: address, to: address, symbol: string, tokenID: number) {
-ALIAS r1 $from // 2954
-POP $from // 2954
-PUSH $from // 2956
-EXTCALL "Address()" // 2958
-POP $from // 2973
-ALIAS r2 $to // 2975
-POP $to // 2975
-PUSH $to // 2977
-EXTCALL "Address()" // 2979
-POP $to // 2994
-ALIAS r3 $symbol // 2996
-POP $symbol // 2996
-ALIAS r4 $tokenID // 2998
-POP $tokenID // 2998
-CAST $tokenID $tokenID #Number // 3000
-// Line 175:		Runtime.expect(symbol == $THIS_SYMBOL, "symbol mismatch");
-	COPY $symbol r5 // 3004
-	ALIAS r6 $literalexpression547 // 3007
-	LOAD $literalexpression547 "SANDY" // 3007
-	EQUAL r5 $literalexpression547 r7 // 3016
-	JMPIF r7 @expect_methodcallexpression542 // 3020
-	ALIAS r5 $literalexpression549 // 3024
-	LOAD $literalexpression549 "symbol mismatch" // 3024
-	THROW $literalexpression549 // 3043
-	@expect_methodcallexpression542: NOP // 3046
-@exit_onMint: // 3046
-RET // 3047
-// Line 176:        //might need to add NFT owns to right here 
-// Line 177:    }
-
-// ********* onInfuse Trigger ***********
-@entry_onInfuse: // 3048
-// Line 178:    trigger onInfuse(from: address, to: address, symbol: string, tokenID: number){
-ALIAS r1 $from // 3049
-POP $from // 3049
-PUSH $from // 3051
-EXTCALL "Address()" // 3053
-POP $from // 3068
-ALIAS r2 $to // 3070
-POP $to // 3070
-PUSH $to // 3072
-EXTCALL "Address()" // 3074
-POP $to // 3089
-ALIAS r3 $symbol // 3091
-POP $symbol // 3091
-ALIAS r4 $tokenID // 3093
-POP $tokenID // 3093
-CAST $tokenID $tokenID #Number // 3095
-// Line 179:        Runtime.expect(Runtime.isWitness(from), "witness failed");
-	ALIAS r5 $methodcallexpression564 // 3099
-	COPY $from r6 // 3099
-	PUSH r6 // 3102
-	LOAD $methodcallexpression564 "Runtime.IsWitness" // 3104
-	EXTCALL $methodcallexpression564 // 3125
-	POP $methodcallexpression564 // 3127
-	JMPIF $methodcallexpression564 @expect_methodcallexpression561 // 3129
-	ALIAS r6 $literalexpression567 // 3133
-	LOAD $literalexpression567 "witness failed" // 3133
-	THROW $literalexpression567 // 3151
-	@expect_methodcallexpression561: NOP // 3154
-@exit_onInfuse: // 3154
-RET // 3155
+// ********* getRom Method ***********
+@entry_getRom: // 3681
+// Line 174:    //need to get readable rom 
+// Line 175:    
+// Line 176:    //- How do I make return type a struct initiialized to the rom size
+// Line 177:    public getRom(symbol:string, id:number):body_rom {
+ALIAS r1 $symbol // 3682
+POP $symbol // 3682
+ALIAS r2 $id // 3684
+POP $id // 3684
+CAST $id $id #Number // 3686
+// Line 178:         local nftROM:body_rom = NFT.readROM<body_rom>($THIS_SYMBOL, id);
+	ALIAS r3 $nftROM // 3690
+	ALIAS r4 $methodcallexpression702 // 3690
+	COPY $id r5 // 3690
+	PUSH r5 // 3693
+	ALIAS r5 $literalexpression706 // 3695
+	LOAD $literalexpression706 "SANDY" // 3695
+	PUSH $literalexpression706 // 3704
+	LOAD $methodcallexpression702 "Runtime.ReadTokenROM" // 3706
+	EXTCALL $methodcallexpression702 // 3730
+	POP $methodcallexpression702 // 3732
+	UNPACK $methodcallexpression702 $methodcallexpression702 // 3734
+	COPY $methodcallexpression702 $nftROM // 3737
+// Line 179:         return nftROM;
+	COPY $nftROM r4 // 3740
+	PUSH r4 // 3743
+	JMP @exit_getRom // 3745
+@exit_getRom: // 3748
+RET // 3749
 // Line 180:    }
 
-// ********* onSeries Trigger ***********
-@entry_onSeries: // 3156
+// ********* getRam Method ***********
+@entry_getRam: // 3750
 // Line 181:
-// Line 182:    trigger onSeries(from: address){
-ALIAS r1 $from // 3157
-POP $from // 3157
-PUSH $from // 3159
-EXTCALL "Address()" // 3161
-POP $from // 3176
-// Line 183:        Runtime.expect(Runtime.isWitness(from), "witness failed");
-	ALIAS r2 $methodcallexpression576 // 3178
-	COPY $from r3 // 3178
-	PUSH r3 // 3181
-	LOAD $methodcallexpression576 "Runtime.IsWitness" // 3183
-	EXTCALL $methodcallexpression576 // 3204
-	POP $methodcallexpression576 // 3206
-	JMPIF $methodcallexpression576 @expect_methodcallexpression573 // 3208
-	ALIAS r3 $literalexpression579 // 3212
-	LOAD $literalexpression579 "witness failed" // 3212
-	THROW $literalexpression579 // 3230
-	@expect_methodcallexpression573: NOP // 3233
-@exit_onSeries: // 3233
-RET // 3234
-// Line 184:    }
+// Line 182:    public getRam(symbol:string, id:number): body_ram
+ALIAS r1 $symbol // 3751
+POP $symbol // 3751
+ALIAS r2 $id // 3753
+POP $id // 3753
+CAST $id $id #Number // 3755
+// Line 183:    {
+// Line 184:        local nftRAM:body_ram = NFT.readRAM<body_ram>($THIS_SYMBOL, id);
+	ALIAS r3 $nftRAM // 3759
+	ALIAS r4 $methodcallexpression718 // 3759
+	COPY $id r5 // 3759
+	PUSH r5 // 3762
+	ALIAS r5 $literalexpression722 // 3764
+	LOAD $literalexpression722 "SANDY" // 3764
+	PUSH $literalexpression722 // 3773
+	LOAD $methodcallexpression718 "Runtime.ReadTokenRAM" // 3775
+	EXTCALL $methodcallexpression718 // 3799
+	POP $methodcallexpression718 // 3801
+	UNPACK $methodcallexpression718 $methodcallexpression718 // 3803
+	COPY $methodcallexpression718 $nftRAM // 3806
+// Line 185:        return nftRAM;
+	COPY $nftRAM r4 // 3809
+	PUSH r4 // 3812
+	JMP @exit_getRam // 3814
+@exit_getRam: // 3817
+RET // 3818
+// Line 186:    }
+
+// ********* onUpgrade Trigger ***********
+@entry_onUpgrade: // 3819
+ALIAS r1 $dataGet // 3820
+LOAD $dataGet "Data.Get" // 3820
+ALIAS r2 $contractName // 3832
+LOAD $contractName "SANDY" // 3832
+ALIAS r3 $owner // 3841
+// reading global: owner
+LOAD r0 8 // 3841
+PUSH r0 // 3846
+LOAD r0 "owner" // 3848
+PUSH r0 // 3857
+PUSH $contractName // 3859
+EXTCALL $dataGet // 3861
+POP $owner // 3863
+PUSH $owner // 3865
+EXTCALL "Address()" // 3867
+POP $owner // 3882
+// Line 187:
+// Line 188:    trigger onUpgrade(from:address)
+ALIAS r1 $from // 3884
+POP $from // 3884
+PUSH $from // 3886
+EXTCALL "Address()" // 3888
+POP $from // 3903
+// Line 189:    {
+// Line 190:        // check is witness and is current owner
+// Line 191:		Runtime.expect(Runtime.isWitness(owner), "invalid witness");
+	ALIAS r2 $methodcallexpression736 // 3905
+	COPY $owner r4 // 3905
+	PUSH r4 // 3908
+	LOAD $methodcallexpression736 "Runtime.IsWitness" // 3910
+	EXTCALL $methodcallexpression736 // 3931
+	POP $methodcallexpression736 // 3933
+	JMPIF $methodcallexpression736 @expect_methodcallexpression733 // 3935
+	ALIAS r4 $literalexpression739 // 3939
+	LOAD $literalexpression739 "invalid witness" // 3939
+	THROW $literalexpression739 // 3958
+	@expect_methodcallexpression733: NOP // 3961
+@exit_onUpgrade: // 3961
+RET // 3962
+// Line 192:    }
+
+// ********* onMint Trigger ***********
+@entry_onMint: // 3963
+// Line 193:    //Mint function
+// Line 194:    trigger onMint(from: address, to: address, symbol: string, tokenID: number) {
+ALIAS r1 $from // 3964
+POP $from // 3964
+PUSH $from // 3966
+EXTCALL "Address()" // 3968
+POP $from // 3983
+ALIAS r2 $to // 3985
+POP $to // 3985
+PUSH $to // 3987
+EXTCALL "Address()" // 3989
+POP $to // 4004
+ALIAS r3 $symbol // 4006
+POP $symbol // 4006
+ALIAS r4 $tokenID // 4008
+POP $tokenID // 4008
+CAST $tokenID $tokenID #Number // 4010
+// Line 195:		Runtime.expect(symbol == $THIS_SYMBOL, "symbol mismatch");
+	COPY $symbol r5 // 4014
+	ALIAS r6 $literalexpression756 // 4017
+	LOAD $literalexpression756 "SANDY" // 4017
+	EQUAL r5 $literalexpression756 r7 // 4026
+	JMPIF r7 @expect_methodcallexpression751 // 4030
+	ALIAS r5 $literalexpression758 // 4034
+	LOAD $literalexpression758 "symbol mismatch" // 4034
+	THROW $literalexpression758 // 4053
+	@expect_methodcallexpression751: NOP // 4056
+@exit_onMint: // 4056
+RET // 4057
+// Line 196:        //might need to add NFT owns to right here 
+// Line 197:    }
+
+// ********* onInfuse Trigger ***********
+@entry_onInfuse: // 4058
+// Line 198:    trigger onInfuse(from: address, to: address, symbol: string, tokenID: number){
+ALIAS r1 $from // 4059
+POP $from // 4059
+PUSH $from // 4061
+EXTCALL "Address()" // 4063
+POP $from // 4078
+ALIAS r2 $to // 4080
+POP $to // 4080
+PUSH $to // 4082
+EXTCALL "Address()" // 4084
+POP $to // 4099
+ALIAS r3 $symbol // 4101
+POP $symbol // 4101
+ALIAS r4 $tokenID // 4103
+POP $tokenID // 4103
+CAST $tokenID $tokenID #Number // 4105
+// Line 199:        Runtime.expect(Runtime.isWitness(from), "witness failed");
+	ALIAS r5 $methodcallexpression773 // 4109
+	COPY $from r6 // 4109
+	PUSH r6 // 4112
+	LOAD $methodcallexpression773 "Runtime.IsWitness" // 4114
+	EXTCALL $methodcallexpression773 // 4135
+	POP $methodcallexpression773 // 4137
+	JMPIF $methodcallexpression773 @expect_methodcallexpression770 // 4139
+	ALIAS r6 $literalexpression776 // 4143
+	LOAD $literalexpression776 "witness failed" // 4143
+	THROW $literalexpression776 // 4161
+	@expect_methodcallexpression770: NOP // 4164
+@exit_onInfuse: // 4164
+RET // 4165
+// Line 200:    }
+
+// ********* onSeries Trigger ***********
+@entry_onSeries: // 4166
+// Line 201:
+// Line 202:    trigger onSeries(from: address){
+ALIAS r1 $from // 4167
+POP $from // 4167
+PUSH $from // 4169
+EXTCALL "Address()" // 4171
+POP $from // 4186
+// Line 203:        Runtime.expect(Runtime.isWitness(from), "witness failed");
+	ALIAS r2 $methodcallexpression785 // 4188
+	COPY $from r3 // 4188
+	PUSH r3 // 4191
+	LOAD $methodcallexpression785 "Runtime.IsWitness" // 4193
+	EXTCALL $methodcallexpression785 // 4214
+	POP $methodcallexpression785 // 4216
+	JMPIF $methodcallexpression785 @expect_methodcallexpression782 // 4218
+	ALIAS r3 $literalexpression788 // 4222
+	LOAD $literalexpression788 "witness failed" // 4222
+	THROW $literalexpression788 // 4240
+	@expect_methodcallexpression782: NOP // 4243
+@exit_onSeries: // 4243
+RET // 4244
+// Line 204:    }
 
 // ********* onWrite Trigger ***********
-@entry_onWrite: // 3235
-// Line 185:    trigger onWrite(from: address,data:number){
-ALIAS r1 $from // 3236
-POP $from // 3236
-PUSH $from // 3238
-EXTCALL "Address()" // 3240
-POP $from // 3255
-ALIAS r2 $data // 3257
-POP $data // 3257
-CAST $data $data #Number // 3259
-// Line 186:        Runtime.expect(Runtime.isWitness(from), "witness failed");
-	ALIAS r3 $methodcallexpression590 // 3263
-	COPY $from r4 // 3263
-	PUSH r4 // 3266
-	LOAD $methodcallexpression590 "Runtime.IsWitness" // 3268
-	EXTCALL $methodcallexpression590 // 3289
-	POP $methodcallexpression590 // 3291
-	JMPIF $methodcallexpression590 @expect_methodcallexpression587 // 3293
-	ALIAS r4 $literalexpression593 // 3297
-	LOAD $literalexpression593 "witness failed" // 3297
-	THROW $literalexpression593 // 3315
-	@expect_methodcallexpression587: NOP // 3318
-@exit_onWrite: // 3318
-RET // 3319
-// Line 187:    }
+@entry_onWrite: // 4245
+// Line 205:    trigger onWrite(from: address,data:number){
+ALIAS r1 $from // 4246
+POP $from // 4246
+PUSH $from // 4248
+EXTCALL "Address()" // 4250
+POP $from // 4265
+ALIAS r2 $data // 4267
+POP $data // 4267
+CAST $data $data #Number // 4269
+// Line 206:        Runtime.expect(Runtime.isWitness(from), "witness failed");
+	ALIAS r3 $methodcallexpression799 // 4273
+	COPY $from r4 // 4273
+	PUSH r4 // 4276
+	LOAD $methodcallexpression799 "Runtime.IsWitness" // 4278
+	EXTCALL $methodcallexpression799 // 4299
+	POP $methodcallexpression799 // 4301
+	JMPIF $methodcallexpression799 @expect_methodcallexpression796 // 4303
+	ALIAS r4 $literalexpression802 // 4307
+	LOAD $literalexpression802 "witness failed" // 4307
+	THROW $literalexpression802 // 4325
+	@expect_methodcallexpression796: NOP // 4328
+@exit_onWrite: // 4328
+RET // 4329
+// Line 207:    }
 
 // ********* onSend Trigger ***********
-@entry_onSend: // 3320
-// Line 188:    trigger onSend(from: address, to: address, symbol: string, tokenID: number){
-ALIAS r1 $from // 3321
-POP $from // 3321
-PUSH $from // 3323
-EXTCALL "Address()" // 3325
-POP $from // 3340
-ALIAS r2 $to // 3342
-POP $to // 3342
-PUSH $to // 3344
-EXTCALL "Address()" // 3346
-POP $to // 3361
-ALIAS r3 $symbol // 3363
-POP $symbol // 3363
-ALIAS r4 $tokenID // 3365
-POP $tokenID // 3365
-CAST $tokenID $tokenID #Number // 3367
-// Line 189:        Runtime.expect(Runtime.isWitness(from), "witness failed");
-	ALIAS r5 $methodcallexpression608 // 3371
-	COPY $from r6 // 3371
-	PUSH r6 // 3374
-	LOAD $methodcallexpression608 "Runtime.IsWitness" // 3376
-	EXTCALL $methodcallexpression608 // 3397
-	POP $methodcallexpression608 // 3399
-	JMPIF $methodcallexpression608 @expect_methodcallexpression605 // 3401
-	ALIAS r6 $literalexpression611 // 3405
-	LOAD $literalexpression611 "witness failed" // 3405
-	THROW $literalexpression611 // 3423
-	@expect_methodcallexpression605: NOP // 3426
-@exit_onSend: // 3426
-RET // 3427
-// Line 190:    }
+@entry_onSend: // 4330
+// Line 208:    trigger onSend(from: address, to: address, symbol: string, tokenID: number){
+ALIAS r1 $from // 4331
+POP $from // 4331
+PUSH $from // 4333
+EXTCALL "Address()" // 4335
+POP $from // 4350
+ALIAS r2 $to // 4352
+POP $to // 4352
+PUSH $to // 4354
+EXTCALL "Address()" // 4356
+POP $to // 4371
+ALIAS r3 $symbol // 4373
+POP $symbol // 4373
+ALIAS r4 $tokenID // 4375
+POP $tokenID // 4375
+CAST $tokenID $tokenID #Number // 4377
+// Line 209:        Runtime.expect(Runtime.isWitness(from), "witness failed");
+	ALIAS r5 $methodcallexpression817 // 4381
+	COPY $from r6 // 4381
+	PUSH r6 // 4384
+	LOAD $methodcallexpression817 "Runtime.IsWitness" // 4386
+	EXTCALL $methodcallexpression817 // 4407
+	POP $methodcallexpression817 // 4409
+	JMPIF $methodcallexpression817 @expect_methodcallexpression814 // 4411
+	ALIAS r6 $literalexpression820 // 4415
+	LOAD $literalexpression820 "witness failed" // 4415
+	THROW $literalexpression820 // 4433
+	@expect_methodcallexpression814: NOP // 4436
+@exit_onSend: // 4436
+RET // 4437
+// Line 210:    }
 
 // ********* onBurn Trigger ***********
-@entry_onBurn: // 3428
-// Line 191:  
-// Line 192:    trigger onBurn(from: address, to: address, symbol: string, tokenID: number) {
-ALIAS r1 $from // 3429
-POP $from // 3429
-PUSH $from // 3431
-EXTCALL "Address()" // 3433
-POP $from // 3448
-ALIAS r2 $to // 3450
-POP $to // 3450
-PUSH $to // 3452
-EXTCALL "Address()" // 3454
-POP $to // 3469
-ALIAS r3 $symbol // 3471
-POP $symbol // 3471
-ALIAS r4 $tokenID // 3473
-POP $tokenID // 3473
-CAST $tokenID $tokenID #Number // 3475
-// Line 193:		Runtime.expect(Runtime.isWitness(from), "witness failed");
-	ALIAS r5 $methodcallexpression626 // 3479
-	COPY $from r6 // 3479
-	PUSH r6 // 3482
-	LOAD $methodcallexpression626 "Runtime.IsWitness" // 3484
-	EXTCALL $methodcallexpression626 // 3505
-	POP $methodcallexpression626 // 3507
-	JMPIF $methodcallexpression626 @expect_methodcallexpression623 // 3509
-	ALIAS r6 $literalexpression629 // 3513
-	LOAD $literalexpression629 "witness failed" // 3513
-	THROW $literalexpression629 // 3531
-	@expect_methodcallexpression623: NOP // 3534
-@exit_onBurn: // 3534
-RET // 3535
+@entry_onBurn: // 4438
+// Line 211:  
+// Line 212:    trigger onBurn(from: address, to: address, symbol: string, tokenID: number) {
+ALIAS r1 $from // 4439
+POP $from // 4439
+PUSH $from // 4441
+EXTCALL "Address()" // 4443
+POP $from // 4458
+ALIAS r2 $to // 4460
+POP $to // 4460
+PUSH $to // 4462
+EXTCALL "Address()" // 4464
+POP $to // 4479
+ALIAS r3 $symbol // 4481
+POP $symbol // 4481
+ALIAS r4 $tokenID // 4483
+POP $tokenID // 4483
+CAST $tokenID $tokenID #Number // 4485
+// Line 213:		Runtime.expect(Runtime.isWitness(from), "witness failed");
+	ALIAS r5 $methodcallexpression835 // 4489
+	COPY $from r6 // 4489
+	PUSH r6 // 4492
+	LOAD $methodcallexpression835 "Runtime.IsWitness" // 4494
+	EXTCALL $methodcallexpression835 // 4515
+	POP $methodcallexpression835 // 4517
+	JMPIF $methodcallexpression835 @expect_methodcallexpression832 // 4519
+	ALIAS r6 $literalexpression838 // 4523
+	LOAD $literalexpression838 "witness failed" // 4523
+	THROW $literalexpression838 // 4541
+	@expect_methodcallexpression832: NOP // 4544
+@exit_onBurn: // 4544
+RET // 4545
