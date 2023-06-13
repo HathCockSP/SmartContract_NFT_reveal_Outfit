@@ -23,7 +23,8 @@ struct body_rom{
     skinType: string;
 
 }
-token SANDY {
+//Will change once complete
+token STST {
     import Array;
     import NFT;
     import Runtime;
@@ -45,11 +46,11 @@ token SANDY {
 	const DOLL_SUPPLY: number = 500;
     const SANDY_SERIESID: number = 1;
     property name: string = "Test";//Will change to SANDY once thoroughly tested
-    property symbol: string = "TST";// Will change once properly tested
+    property symbol: string = "STST";// Will change once properly tested
     property isFungible: bool = false;
     property isFinite: bool = true;
     property isBurnable: bool = true;
-	property maxSupply: number = DOLL_SUPPLY;
+	property maxSupply: number = 70000;//random test value, Might want maxSupply set to 0 and isFinite set to false as well
     property owner: address = owner;
     
     nft limb<limb_rom,limb_ram> {
