@@ -11,49 +11,56 @@
 // Line 11:}
 // Line 12:
 // Line 13:struct body_ram{ 
-// Line 14:}
-// Line 15:
-// Line 16:struct body_rom{
-// Line 17:    created: timestamp;
-// Line 18:    name: string;
-// Line 19:    description: string;
-// Line 20:    infoURL: string;
-// Line 21:    imageURL: string;
-// Line 22:    sandType: string;
-// Line 23:    skinType: string;
-// Line 24:
-// Line 25:}
-// Line 26://Will change once complete
-// Line 27:token STST {
-// Line 28:    import Array;
-// Line 29:    import NFT;
-// Line 30:    import Runtime;
-// Line 31:    import Time;
-// Line 32:    import Token;
-// Line 33:    import Map;
-// Line 34:
-// Line 35:    global owner: address;
-// Line 36:    global owns_sandy: storage_map<address,bool>; 
-// Line 37:    global _infusionAmt: number;
-// Line 38:    /*
-// Line 39:     - Can use the seriesID as the number and can use randomization that way. Will have to think more about this
-// Line 40:    */
-// Line 41:    global _limbs: storage_map<string,number>; //wanted this to be an array so I can get index by modulus. Will test out.
-// Line 42:    global _categories: storage_map<string,number>;
-// Line 43:    global _infusionTkn: string;
-// Line 44:
-// Line 45:
-// Line 46:	const DOLL_SUPPLY: number = 500;
-// Line 47:    const SANDY_SERIESID: number = 1;
-// Line 48:    property name: string = "Test";//Will change to SANDY once thoroughly tested
-// Line 49:    property symbol: string = "STST";// Will change once properly tested
-// Line 50:    property isFungible: bool = false;
-// Line 51:    property isFinite: bool = true;
-// Line 52:    property isBurnable: bool = true;
-// Line 53:	property maxSupply: number = 70000;//random test value, Might want maxSupply set to 0 and isFinite set to false as well
-// Line 54:    property owner: address = owner;
-// Line 55:    
-// Line 56:    nft limb<limb_rom,limb_ram> {
+// Line 14:
+// Line 15:}
+// Line 16:
+// Line 17:struct body_rom{
+// Line 18:    created: timestamp;
+// Line 19:    name: string;
+// Line 20:    description: string;
+// Line 21:    infoURL: string;
+// Line 22:    imageURL: string;
+// Line 23:    sandType: string;
+// Line 24:    skinType: string;
+// Line 25:    bodyType: number;           // Could be in range of 1 ~ 
+// Line 26:}
+// Line 27:
+// Line 28://Will change once complete
+// Line 29:token STST {
+// Line 30:    import Array;
+// Line 31:    import NFT;
+// Line 32:    import Runtime;
+// Line 33:    import Time;
+// Line 34:    import Token;
+// Line 35:    import Map;
+// Line 36:    import Random;
+// Line 37:
+// Line 38:    global owner: address;
+// Line 39:    global owns_sandy: storage_map<address,bool>; 
+// Line 40:    global _infusionAmt: number;
+// Line 41:    /*
+// Line 42:     - Can use the seriesID as the number and can use randomization that way. Will have to think more about this
+// Line 43:    */
+// Line 44:    global _limbs: storage_map<string,number>; //wanted this to be an array so I can get index by modulus. Will test out.
+// Line 45:    global _categories: storage_map<string,number>;
+// Line 46:    global _infusionTkn: string;
+// Line 47:
+// Line 48:
+// Line 49:	const DOLL_SUPPLY: number = 500;
+// Line 50:    const SANDY_SERIESID: number = 1;
+// Line 51:
+// Line 52:    property name: string = "Test Sandy";    //Will change to SANDY once thoroughly tested
+// Line 53:    property symbol: string = "STST";  // Will change once properly tested
+// Line 54:    property isFungible: bool = false;
+// Line 55:    property isFinite: bool = true;
+// Line 56:    property isBurnable: bool = true;
+// Line 57:    property maxSupply: number = DOLL_SUPPLY;
+// Line 58:    property isTransferable: bool = true;
+// Line 59:    property isCapped: bool = false;
+// Line 60:    property decimals:number = 8;
+// Line 61:    property owner:address = owner;
+// Line 62:    
+// Line 63:    nft limb<limb_rom,limb_ram> {
 
 // ********* getName Property ***********
 @entry_getName: // 0
@@ -72,9 +79,8 @@ ALIAS r3 $_ROM // 52
 LOAD r0 "ROM" // 52
 GET r2 $_ROM r0 // 59
 UNPACK $_ROM $_ROM // 63
-// Line 57:
-// Line 58:    property name: string{
-// Line 59:        return _ROM.name;
+// Line 64:        property name: string{
+// Line 65:            return _ROM.name;
 	COPY $_ROM r1 // 66
 	LOAD r2 "name" // 69
 	GET r1 r1 r2 // 77
@@ -82,8 +88,7 @@ UNPACK $_ROM $_ROM // 63
 	JMP @exit_getName // 83
 @exit_getName: // 86
 RET // 87
-// Line 60:
-// Line 61:    }
+// Line 66:        }
 
 // ********* getDescription Property ***********
 @entry_getDescription: // 88
@@ -102,9 +107,9 @@ ALIAS r3 $_ROM // 140
 LOAD r0 "ROM" // 140
 GET r2 $_ROM r0 // 147
 UNPACK $_ROM $_ROM // 151
-// Line 62:
-// Line 63:    property description: string{
-// Line 64:        return _ROM.description;
+// Line 67:
+// Line 68:        property description: string{
+// Line 69:            return _ROM.description;
 	COPY $_ROM r1 // 154
 	LOAD r2 "description" // 157
 	GET r1 r1 r2 // 172
@@ -112,8 +117,7 @@ UNPACK $_ROM $_ROM // 151
 	JMP @exit_getDescription // 178
 @exit_getDescription: // 181
 RET // 182
-// Line 65:
-// Line 66:    }
+// Line 70:        }
 
 // ********* getInfoURL Property ***********
 @entry_getInfoURL: // 183
@@ -132,8 +136,9 @@ ALIAS r3 $_ROM // 235
 LOAD r0 "ROM" // 235
 GET r2 $_ROM r0 // 242
 UNPACK $_ROM $_ROM // 246
-// Line 67:    property infoURL: string{
-// Line 68:        return _ROM.infoURL;
+// Line 71:
+// Line 72:        property infoURL: string{
+// Line 73:            return _ROM.infoURL;
 	COPY $_ROM r1 // 249
 	LOAD r2 "infoURL" // 252
 	GET r1 r1 r2 // 263
@@ -141,8 +146,7 @@ UNPACK $_ROM $_ROM // 246
 	JMP @exit_getInfoURL // 269
 @exit_getInfoURL: // 272
 RET // 273
-// Line 69:
-// Line 70:    }
+// Line 74:        }
 
 // ********* getImageURL Property ***********
 @entry_getImageURL: // 274
@@ -161,8 +165,9 @@ ALIAS r3 $_ROM // 326
 LOAD r0 "ROM" // 326
 GET r2 $_ROM r0 // 333
 UNPACK $_ROM $_ROM // 337
-// Line 71:    property imageURL: string{
-// Line 72:        return _ROM.imageURL;
+// Line 75:
+// Line 76:        property imageURL: string{
+// Line 77:            return _ROM.imageURL;
 	COPY $_ROM r1 // 340
 	LOAD r2 "imageURL" // 343
 	GET r1 r1 r2 // 355

@@ -1,9 +1,7 @@
-// Line 73:
-// Line 74:    }
-// Line 75:
-// Line 76:    }
-// Line 77:
-// Line 78:    nft character<body_rom, body_ram> {
+// Line 78:        }
+// Line 79:    }
+// Line 80:
+// Line 81:    nft character<body_rom, body_ram> {
 
 // ********* getName Property ***********
 @entry_getName: // 0
@@ -22,9 +20,8 @@ ALIAS r3 $_ROM // 52
 LOAD r0 "ROM" // 52
 GET r2 $_ROM r0 // 59
 UNPACK $_ROM $_ROM // 63
-// Line 79:
-// Line 80:        property name: string{
-// Line 81:            return _ROM.name;
+// Line 82:        property name: string{
+// Line 83:            return _ROM.name;
 	COPY $_ROM r1 // 66
 	LOAD r2 "name" // 69
 	GET r1 r1 r2 // 77
@@ -32,7 +29,7 @@ UNPACK $_ROM $_ROM // 63
 	JMP @exit_getName // 83
 @exit_getName: // 86
 RET // 87
-// Line 82:        }
+// Line 84:        }
 
 // ********* getDescription Property ***********
 @entry_getDescription: // 88
@@ -51,9 +48,9 @@ ALIAS r3 $_ROM // 140
 LOAD r0 "ROM" // 140
 GET r2 $_ROM r0 // 147
 UNPACK $_ROM $_ROM // 151
-// Line 83:
-// Line 84:        property description: string{
-// Line 85:            return _ROM.description;
+// Line 85:
+// Line 86:        property description: string {
+// Line 87:            return _ROM.description;
 	COPY $_ROM r1 // 154
 	LOAD r2 "description" // 157
 	GET r1 r1 r2 // 172
@@ -61,8 +58,7 @@ UNPACK $_ROM $_ROM // 151
 	JMP @exit_getDescription // 178
 @exit_getDescription: // 181
 RET // 182
-// Line 86:
-// Line 87:        }
+// Line 88:        }
 
 // ********* getInfoURL Property ***********
 @entry_getInfoURL: // 183
@@ -81,8 +77,9 @@ ALIAS r3 $_ROM // 235
 LOAD r0 "ROM" // 235
 GET r2 $_ROM r0 // 242
 UNPACK $_ROM $_ROM // 246
-// Line 88:        property infoURL: string{
-// Line 89:            return _ROM.infoURL;
+// Line 89:
+// Line 90:        property infoURL: string {
+// Line 91:            return _ROM.infoURL;
 	COPY $_ROM r1 // 249
 	LOAD r2 "infoURL" // 252
 	GET r1 r1 r2 // 263
@@ -90,8 +87,7 @@ UNPACK $_ROM $_ROM // 246
 	JMP @exit_getInfoURL // 269
 @exit_getInfoURL: // 272
 RET // 273
-// Line 90:
-// Line 91:        }
+// Line 92:        }
 
 // ********* getImageURL Property ***********
 @entry_getImageURL: // 274
@@ -110,8 +106,8 @@ ALIAS r3 $_ROM // 326
 LOAD r0 "ROM" // 326
 GET r2 $_ROM r0 // 333
 UNPACK $_ROM $_ROM // 337
-// Line 92:        property imageURL: string{
-// Line 93:           return  _ROM.imageURL;
+// Line 93:        property imageURL: string {
+// Line 94:           return  _ROM.imageURL;
 	COPY $_ROM r1 // 340
 	LOAD r2 "imageURL" // 343
 	GET r1 r1 r2 // 355
@@ -119,7 +115,6 @@ UNPACK $_ROM $_ROM // 337
 	JMP @exit_getImageURL // 361
 @exit_getImageURL: // 364
 RET // 365
-// Line 94:
 // Line 95:        }
 
 // ********* getCreated Property ***********
@@ -140,7 +135,7 @@ LOAD r0 "ROM" // 418
 GET r2 $_ROM r0 // 425
 UNPACK $_ROM $_ROM // 429
 // Line 96:
-// Line 97:        property created: timestamp{
+// Line 97:        property created: timestamp { 
 // Line 98:            return _ROM.created;
 	COPY $_ROM r1 // 432
 	LOAD r2 "created" // 435
@@ -149,8 +144,7 @@ UNPACK $_ROM $_ROM // 429
 	JMP @exit_getCreated // 452
 @exit_getCreated: // 455
 RET // 456
-// Line 99:
-// Line 100:        }
+// Line 99:        }
 
 // ********* getSandType Property ***********
 @entry_getSandType: // 457
@@ -169,9 +163,9 @@ ALIAS r3 $_ROM // 509
 LOAD r0 "ROM" // 509
 GET r2 $_ROM r0 // 516
 UNPACK $_ROM $_ROM // 520
-// Line 101:
-// Line 102:         property sandType: string{
-// Line 103:            return _ROM.sandType;
+// Line 100:
+// Line 101:        property sandType: string {
+// Line 102:            return _ROM.sandType;
 	COPY $_ROM r1 // 523
 	LOAD r2 "sandType" // 526
 	GET r1 r1 r2 // 538
@@ -179,7 +173,7 @@ UNPACK $_ROM $_ROM // 520
 	JMP @exit_getSandType // 544
 @exit_getSandType: // 547
 RET // 548
-// Line 104:        }
+// Line 103:        }
 
 // ********* getSkinType Property ***********
 @entry_getSkinType: // 549
@@ -198,9 +192,9 @@ ALIAS r3 $_ROM // 601
 LOAD r0 "ROM" // 601
 GET r2 $_ROM r0 // 608
 UNPACK $_ROM $_ROM // 612
-// Line 105:
-// Line 106:        property skinType: string{
-// Line 107:            return _ROM.skinType;
+// Line 104:
+// Line 105:        property skinType: string {
+// Line 106:            return _ROM.skinType;
 	COPY $_ROM r1 // 615
 	LOAD r2 "skinType" // 618
 	GET r1 r1 r2 // 630
@@ -208,3 +202,32 @@ UNPACK $_ROM $_ROM // 612
 	JMP @exit_getSkinType // 636
 @exit_getSkinType: // 639
 RET // 640
+// Line 107:        }
+
+// ********* getBodyType Property ***********
+@entry_getBodyType: // 641
+POP r1 // get nft tokenID from stack // 642
+// reading nft data
+LOAD r0 "ROM" // 644
+PUSH r0 // fields // 651
+PUSH r1 // tokenID // 653
+LOAD r0 "STST" // 655
+PUSH r0 // symbol // 663
+LOAD r0 "Runtime.ReadToken" // 665
+EXTCALL r0 // 686
+POP r2 // 688
+UNPACK r2 r2 // 690
+ALIAS r3 $_ROM // 693
+LOAD r0 "ROM" // 693
+GET r2 $_ROM r0 // 700
+UNPACK $_ROM $_ROM // 704
+// Line 108:
+// Line 109:        property bodyType: number {
+// Line 110:            return _ROM.bodyType;
+	COPY $_ROM r1 // 707
+	LOAD r2 "bodyType" // 710
+	GET r1 r1 r2 // 722
+	PUSH r1 // 726
+	JMP @exit_getBodyType // 728
+@exit_getBodyType: // 731
+RET // 732

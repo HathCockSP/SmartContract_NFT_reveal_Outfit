@@ -11,6 +11,7 @@ struct limb_rom {
 }
 
 struct body_ram{ 
+
 }
 
 struct body_rom{
@@ -21,8 +22,9 @@ struct body_rom{
     imageURL: string;
     sandType: string;
     skinType: string;
-
+    bodyType: number;           // Could be in range of 1 ~ 
 }
+
 //Will change once complete
 token STST {
     import Array;
@@ -31,6 +33,7 @@ token STST {
     import Time;
     import Token;
     import Map;
+    import Random;
 
     global owner: address;
     global owns_sandy: storage_map<address,bool>; 
@@ -45,109 +48,127 @@ token STST {
 
 	const DOLL_SUPPLY: number = 500;
     const SANDY_SERIESID: number = 1;
-    property name: string = "Test";//Will change to SANDY once thoroughly tested
-    property symbol: string = "STST";// Will change once properly tested
+
+    property name: string = "Test Sandy";    //Will change to SANDY once thoroughly tested
+    property symbol: string = "STST";  // Will change once properly tested
     property isFungible: bool = false;
     property isFinite: bool = true;
     property isBurnable: bool = true;
-	property maxSupply: number = 70000;//random test value, Might want maxSupply set to 0 and isFinite set to false as well
-    property owner: address = owner;
+    property maxSupply: number = DOLL_SUPPLY;
+    property isTransferable: bool = true;
+    property isCapped: bool = false;
+    property decimals:number = 8;
+    property owner:address = owner;
     
     nft limb<limb_rom,limb_ram> {
-
-    property name: string{
-        return _ROM.name;
-
-    }
-
-    property description: string{
-        return _ROM.description;
-
-    }
-    property infoURL: string{
-        return _ROM.infoURL;
-
-    }
-    property imageURL: string{
-        return _ROM.imageURL;
-
-    }
-
-    }
-
-    nft character<body_rom, body_ram> {
-
         property name: string{
             return _ROM.name;
         }
 
         property description: string{
             return _ROM.description;
-
         }
+
         property infoURL: string{
             return _ROM.infoURL;
-
         }
+
         property imageURL: string{
+            return _ROM.imageURL;
+        }
+    }
+
+    nft character<body_rom, body_ram> {
+        property name: string{
+            return _ROM.name;
+        }
+
+        property description: string {
+            return _ROM.description;
+        }
+
+        property infoURL: string {
+            return _ROM.infoURL;
+        }
+        property imageURL: string {
            return  _ROM.imageURL;
-
         }
 
-        property created: timestamp{
+        property created: timestamp { 
             return _ROM.created;
-
         }
 
-         property sandType: string{
+        property sandType: string {
             return _ROM.sandType;
         }
 
-        property skinType: string{
+        property skinType: string {
             return _ROM.skinType;
         }
 
+        property bodyType: number {
+            return _ROM.bodyType;
+        }
     }
-      constructor(con_creator:address)
-    {
+
+    constructor(con_creator: address) {
         owner = con_creator;
         _infusionTkn = "SOUL";
-        local assetDecimals:number = 10^Token.getDecimals(_infusionTkn);    
-        _infusionAmt = 50*assetDecimals;
+        local assetDecimals : number = 10 ^ Token.getDecimals(_infusionTkn);    
+        _infusionAmt = 50 * assetDecimals;
 
         NFT.createSeries(owner, $THIS_SYMBOL,SANDY_SERIESID,DOLL_SUPPLY,TokenSeries.Unique,character);
+        Random.seed(16676869);
     }
    
-     public transerNFT(from:address,to:address,id:number){
+    public transerNFT(from:address,to:address,id:number) {
         Runtime.expect(Runtime.isWitness(from),"Must be owner of NFT to Transfer");
         NFT.transfer(from,to,$THIS_SYMBOL,id);
     }
 
-    public mintBody(to:address,created:timestamp,name:string,description: string,infoURL: string,imageURL: string,sandType: string, skinType: string) 
-    {
-        Runtime.expect(owns_sandy.has(to) == false,"Cannot purchase due to you already owning a SANDY"); 
+    public upgradeOwner(newOwner: address) {
+        Runtime.expect(Runtime.isWitness(owner), "Must be owner of this contract");
+        owner = newOwner;
+    }
+
+    public mintBody( 
+                to: address, 
+                created: timestamp, 
+                name: string, 
+                description: string, 
+                infoURL: string,
+                imageURL: string,
+                sandType: string, 
+                skinType: string) : number {
+
+        Runtime.expect(owns_sandy.has(to) == false, "Not able to mint new sandy because you already have one."); 
         Runtime.expect(Runtime.isWitness(to),"Must be witness");
-		local rom:body_rom = Struct.body_rom(Time.now(),name,description,infoURL,imageURL,sandType,skinType);
-        //local ram:body_ram = Struct.body_ram("SANDY");//template name for now
+
+        local _bodyType: number = Random.generate() % 10; // This could be changeable due to the skinType (Organic and Metal has different type of sandy)
+		local rom: body_rom = Struct.body_rom(Time.now(), name, description, infoURL, imageURL, sandType, skinType, _bodyType);
           
-            /* Test Can I infust once i Mint to another Address?? Needs to be Tested*/
-        local id = NFT.mint(owner,owner, $THIS_SYMBOL, rom,"", SANDY_SERIESID);
-        NFT.infuse(owner, $THIS_SYMBOL, id, _infusionTkn, _infusionAmt);
-        this.transerNFT(owner,to,id);
-        owns_sandy.set(to,true);
+        local id = NFT.mint(to, to, $THIS_SYMBOL, rom, "", SANDY_SERIESID);
+        // NFT.infuse(to, $THIS_SYMBOL, id, _infusionTkn, _infusionAmt);
+        // NFT.transfer(owner, to, $THIS_SYMBOL, id);
+        // this.transerNFT(owner,to,id);
+        // owns_sandy.set(to,true);
+
+        Runtime.log("New created Sandy Token " + id);
+
+        return id;
     } 
     
-     private initMint(seriesID:number,name: string,description: string,infoURL: string,imageURL: string){
-        local rom:limb_rom = Struct.limb_rom(name,description,infoURL,imageURL);
-        local id: number = NFT.mint(owner,owner, $THIS_SYMBOL, rom,"",seriesID);
-    }
+    // private initMint(seriesID:number,name: string,description: string,infoURL: string,imageURL: string){
+    //     local rom:limb_rom = Struct.limb_rom(name,description,infoURL,imageURL);
+    //     local id: number = NFT.mint(owner,owner, $THIS_SYMBOL, rom,"",seriesID);
+    // }
   
 	//@Param seriesId - Must be a unique number, could use UID.generate()
     public createLimb(seriesID:number,limbSupply:number,name: string,description: string,infoURL: string,imageURL: string){
         Runtime.expect(Runtime.isWitness(owner),"Must be owner of contract");
         NFT.createSeries(owner, $THIS_SYMBOL,seriesID,limbSupply,TokenSeries.Duplicated,limb);
         local rom:limb_rom = Struct.limb_rom(name,description,infoURL,imageURL);
-        this.initMint(seriesID,name,description,infoURL,imageURL);
+        // this.initMint(seriesID,name,description,infoURL,imageURL);
     }
 
    
@@ -160,17 +181,13 @@ token STST {
         local id: number = NFT.mint(from,to, $THIS_SYMBOL,"","",seriesID);
     }
 
-    
-
     //Will deprecated and used for somthing else
 	//will have to make sure that the owner is the only one who can edit the sandy name
-    public editSANDY(nftOwner:address,tokenID:number,name:string){
+    public editSANDY(nftOwner:address,tokenID:number,name:string) {
         Runtime.expect(Runtime.isWitness(nftOwner),"Must be owner of NFT");//have to find a way to get current nft owner
 		local editRam:body_ram = Struct.body_ram();
 		//my assumption that write must follow the order of the struct 
         NFT.write(nftOwner,$THIS_SYMBOL,tokenID,editRam);//changeable data
-
-
     }
     //need to get readable rom 
     
@@ -180,14 +197,12 @@ token STST {
          return nftROM;
     }
 
-    public getRam(symbol:string, id:number): body_ram
-    {
+    public getRam(symbol:string, id:number): body_ram {
         local nftRAM:body_ram = NFT.readRAM<body_ram>($THIS_SYMBOL, id);
         return nftRAM;
     }
 
-    trigger onUpgrade(from:address)
-    {
+    trigger onUpgrade(from:address) {
         // check is witness and is current owner
 		Runtime.expect(Runtime.isWitness(owner), "invalid witness");
     }
@@ -196,17 +211,19 @@ token STST {
 		Runtime.expect(symbol == $THIS_SYMBOL, "symbol mismatch");
         //might need to add NFT owns to right here 
     }
-    trigger onInfuse(from: address, to: address, symbol: string, tokenID: number){
+    trigger onInfuse(from: address, to: address, symbol: string, tokenID: number) {
         Runtime.expect(Runtime.isWitness(from), "witness failed");
     }
 
-    trigger onSeries(from: address){
+    trigger onSeries(from: address) {
         Runtime.expect(Runtime.isWitness(from), "witness failed");
     }
-    trigger onWrite(from: address,data:number){
+
+    trigger onWrite(from: address,data:number) {
         Runtime.expect(Runtime.isWitness(from), "witness failed");
     }
-    trigger onSend(from: address, to: address, symbol: string, tokenID: number){
+
+    trigger onSend(from: address, to: address, symbol: string, tokenID: number) {
         Runtime.expect(Runtime.isWitness(from), "witness failed");
     }
   
