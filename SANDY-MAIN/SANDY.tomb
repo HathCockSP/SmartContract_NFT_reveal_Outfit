@@ -32,7 +32,7 @@ enum SkinCount {
 }
 
 //Will change once complete
-token STST {
+token STLN {
     import Array;
     import NFT;
     import Runtime;
@@ -78,7 +78,7 @@ token STST {
     const ENERGY_CATEGORIES: number = 10;
 
     property name: string = "Test Sandy";    //Will change to SANDY once thoroughly tested
-    property symbol: string = "STST";  // Will change once properly tested
+    property symbol: string = "STLN";  // Will change once properly tested
     property isFungible: bool = false;
     property isFinite: bool = true;
     property isBurnable: bool = true;
@@ -161,14 +161,17 @@ token STST {
         owner = con_creator;
         _infusionTkn = "SOUL";
         local assetDecimals : number = 10 ^ Token.getDecimals(_infusionTkn);    
+
         _infusionAmt = 50 * assetDecimals;
+
         mintBodyInited = false;
+
         bodyBaseURI = "";
+
         organicCount = 0;
         energyCount = 0;
         preciousCount = 0;
 
-        NFT.createSeries(owner, $THIS_SYMBOL, SERIES_BODY, DOLL_SUPPLY, TokenSeries.Unique, character);
         Random.seed(16676869);
     }
    
@@ -187,7 +190,7 @@ token STST {
         Runtime.expect(owner == from, "Has no permission to init minting");
         Runtime.expect(mintBodyInited == false, "Body minting has already been initiated");
 
-        NFT.createSeries(owner, $THIS_SYMBOL, SERIES_BODY, DOLL_SUPPLY, TokenSeries.Unique, character);
+        // NFT.createSeries(owner, $THIS_SYMBOL, SERIES_BODY, DOLL_SUPPLY, TokenSeries.Unique, character);
         
         organicCount = 0;
         preciousCount = 0;
@@ -236,12 +239,13 @@ token STST {
 
         local _imageURL: string = "";
 
-        _imageURL = bodyBaseURI + "/" + skinType + _bodyType;
+        _imageURL = bodyBaseURI + "/" + skinType + "/" + _bodyType;
+        _imageURL += ".png";
 
 		local rom: body_rom = Struct.body_rom(Time.now(), name, description, "", _imageURL, sandType, skinType, _bodyType);
           
-        local id = NFT.mint(owner, to, $THIS_SYMBOL, rom, "", SERIES_BODY);
-        NFT.infuse(to, $THIS_SYMBOL, id, _infusionTkn, _infusionAmt);
+        local id = NFT.mint(to, to, $THIS_SYMBOL, rom, "", SERIES_BODY);
+        // NFT.infuse(to, $THIS_SYMBOL, id, _infusionTkn, _infusionAmt);
 
         // owns_sandy.set(to, true);
 

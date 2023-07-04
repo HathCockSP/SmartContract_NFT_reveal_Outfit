@@ -32,7 +32,7 @@
 // Line 32:}
 // Line 33:
 // Line 34://Will change once complete
-// Line 35:token STST {
+// Line 35:token STLN {
 // Line 36:    import Array;
 // Line 37:    import NFT;
 // Line 38:    import Runtime;
@@ -78,7 +78,7 @@
 // Line 78:    const ENERGY_CATEGORIES: number = 10;
 // Line 79:
 // Line 80:    property name: string = "Test Sandy";    //Will change to SANDY once thoroughly tested
-// Line 81:    property symbol: string = "STST";  // Will change once properly tested
+// Line 81:    property symbol: string = "STLN";  // Will change once properly tested
 // Line 82:    property isFungible: bool = false;
 // Line 83:    property isFinite: bool = true;
 // Line 84:    property isBurnable: bool = true;
@@ -97,7 +97,7 @@ POP r1 // get nft tokenID from stack // 1
 LOAD r0 "ROM" // 3
 PUSH r0 // fields // 10
 PUSH r1 // tokenID // 12
-LOAD r0 "STST" // 14
+LOAD r0 "STLN" // 14
 PUSH r0 // symbol // 22
 LOAD r0 "Runtime.ReadToken" // 24
 EXTCALL r0 // 45
@@ -125,7 +125,7 @@ POP r1 // get nft tokenID from stack // 89
 LOAD r0 "ROM" // 91
 PUSH r0 // fields // 98
 PUSH r1 // tokenID // 100
-LOAD r0 "STST" // 102
+LOAD r0 "STLN" // 102
 PUSH r0 // symbol // 110
 LOAD r0 "Runtime.ReadToken" // 112
 EXTCALL r0 // 133
@@ -154,7 +154,7 @@ POP r1 // get nft tokenID from stack // 184
 LOAD r0 "ROM" // 186
 PUSH r0 // fields // 193
 PUSH r1 // tokenID // 195
-LOAD r0 "STST" // 197
+LOAD r0 "STLN" // 197
 PUSH r0 // symbol // 205
 LOAD r0 "Runtime.ReadToken" // 207
 EXTCALL r0 // 228
@@ -183,7 +183,7 @@ POP r1 // get nft tokenID from stack // 275
 LOAD r0 "ROM" // 277
 PUSH r0 // fields // 284
 PUSH r1 // tokenID // 286
-LOAD r0 "STST" // 288
+LOAD r0 "STLN" // 288
 PUSH r0 // symbol // 296
 LOAD r0 "Runtime.ReadToken" // 298
 EXTCALL r0 // 319
