@@ -1,0 +1,355 @@
+struct limb_ram{
+    inUse: bool;
+
+}
+
+struct limb_rom {
+    name: string;
+    description: string;
+    infoURL: string;
+    imageURL: string;
+}
+
+struct body_ram{ 
+
+}
+
+struct body_rom{
+    created: timestamp;
+    name: string;
+    description: string;
+    infoURL: string;
+    imageURL: string;
+    sandType: string;
+    skinType: string;
+    bodyType: number;           // Could be in range of 1 ~ 
+}
+
+enum SkinCount {
+    Organic = 175,
+    Precious = 175,
+    Energy = 150
+}
+
+//Will change once complete
+token STLN {
+    import Array;
+    import NFT;
+    import Runtime;
+    import Time;
+    import Token;
+    import Map;
+    import Random;
+    import Stake;
+
+    global owner: address;
+
+    global owns_sandy: storage_map<address,bool>; 
+    global balances: storage_map <address, number>;
+    global _infusionAmt: number;
+
+    global mintBodyInited: bool;
+    global bodyBaseURI: string;
+
+    global _limbs: storage_map<string,number>; //wanted this to be an array so I can get index by modulus. Will test out.
+    global _categories: storage_map<string,number>;
+    global _infusionTkn: string;
+
+	const DOLL_SUPPLY: number = 500;
+
+    /**
+    * Constant variables for sandy NFT series IDs.
+    */
+    const SERIES_BODY: number = 1;
+    const SERIES_EYE: number = 2;
+    const SERIES_MOUTH: number = 3;
+    const SERIES_BACKGROUND: number = 4;
+
+    /**
+    * Constant variables for sandy max supply 
+    */
+
+    global organicCount: number;
+    global preciousCount: number;
+    global energyCount: number;
+
+    const ORGANIC_CATEGORIES: number = 12;
+    const PRECIOUS_CATEGORIES: number = 12;
+    const ENERGY_CATEGORIES: number = 10;
+
+    property name: string = "Test Sandy";    //Will change to SANDY once thoroughly tested
+    property symbol: string = "STLN";  // Will change once properly tested
+    property isFungible: bool = false;
+    property isFinite: bool = true;
+    property isBurnable: bool = true;
+    property maxSupply: number = DOLL_SUPPLY;
+    property isTransferable: bool = true;
+    property isCapped: bool = false;
+    property decimals:number = 8;
+    property owner:address = owner;
+    
+    nft limb<limb_rom,limb_ram> {
+        property name: string{
+            return _ROM.name;
+        }
+
+        property description: string{
+            return _ROM.description;
+        }
+
+        property infoURL: string{
+            return _ROM.infoURL;
+        }
+
+        property imageURL: string{
+            return _ROM.imageURL;
+        }
+    }
+
+    nft character<body_rom, body_ram> {
+        property name: string{
+            return _ROM.name;
+        }
+
+        property description: string {
+            return _ROM.description;
+        }
+
+        property infoURL: string {
+            return _ROM.infoURL;
+        }
+        property imageURL: string {
+           return  _ROM.imageURL;
+        }
+
+        property created: timestamp { 
+            return _ROM.created;
+        }
+
+        property sandType: string {
+            return _ROM.sandType;
+        }
+
+        property skinType: string {
+            return _ROM.skinType;
+        }
+
+        property bodyType: number {
+            return _ROM.bodyType;
+        }
+
+        property categoryName: string {
+            local index: number = _ROM.bodyType;
+
+            if (_ROM.skinType == "Energy") {
+                local energyArray: array<string> = {"Glass", "Ice", "Lightning", "Reborn", "Sand Storm", "Smoke", "Soul Glass", "Volcano Ash", "Volcano Rock", "White Sand Storm"};
+                
+                return energyArray[index];
+            } else if (_ROM.skinType == "Organic") {
+                local organicArray: array<string> = {"Burlap Blue","Burlap Brown","Burlap DarkGrey","Burlap Green","Burlap Grey&Brown","Burlap Grey&Red","Burlap Red","Burlap White","Burlap White&Blue","Burlap White&Brown","Burlap White&Red"};
+                
+                return organicArray[index];
+            } else if (_ROM.skinType == "Precious") {
+                local preciousArray: array<string> = {"Bronze", "Circuit", "Diamond", "Gold", "Iron", "Lizard", "Pink Diamond", "Pink Stone", "Rose Diamond", "Rose Stone", "Silver", "White Fur"};
+                
+                return preciousArray[index];
+            }
+        }
+    }
+
+    constructor(con_creator: address) {
+        owner = con_creator;
+        _infusionTkn = "SOUL";
+        local assetDecimals : number = 10 ^ Token.getDecimals(_infusionTkn);    
+
+        _infusionAmt = 50 * assetDecimals;
+
+        mintBodyInited = false;
+
+        bodyBaseURI = "";
+
+        organicCount = 0;
+        energyCount = 0;
+        preciousCount = 0;
+
+        Random.seed(16676869);
+    }
+   
+    public transerNFT(from:address,to:address,id:number) {
+        Runtime.expect(Runtime.isWitness(from),"Must be owner of NFT to Transfer");
+        NFT.transfer(from, to, $THIS_SYMBOL, id);
+    }
+
+    public upgradeOwner(newOwner: address) {
+        Runtime.expect(Runtime.isWitness(owner), "Must be owner of this contract");
+        owner = newOwner;
+    }
+
+    public initBodyMinting(from: address) {
+        Runtime.expect(Runtime.isWitness(from), "From address is not signer of this transaction");
+        Runtime.expect(owner == from, "Has no permission to init minting");
+        Runtime.expect(mintBodyInited == false, "Body minting has already been initiated");
+
+        // NFT.createSeries(owner, $THIS_SYMBOL, SERIES_BODY, DOLL_SUPPLY, TokenSeries.Unique, character);
+        
+        organicCount = 0;
+        preciousCount = 0;
+        energyCount = 0;
+    }
+
+    public setSkinMaterialBaseURI(from:address, uri: string) {
+        Runtime.expect(uri.length() > 0, "URI should be valid string");
+        Runtime.expect(Runtime.isWitness(from), "From address is not signer of this transaction");
+        Runtime.expect(owner == from, "Has no permission to init minting");
+
+        bodyBaseURI = uri;
+    }
+
+    public mintBody( 
+                to: address, 
+                name: string, 
+                description: string, 
+                sandType: string, 
+                skinType: string) : number {
+        Runtime.expect(skinType == "Organic" || skinType == "Preciuos" || skinType == "Energy", "Skin Type is invalid!");
+        Runtime.expect(sandType == "Moon" || sandType == "Sun" || sandType == "Pearl", "Sand Type is invalid!");
+
+        // Runtime.expect(owns_sandy.has(to) == false, "You are not allow to have multiple sandy in one address");
+
+        local _bodyType: number;
+
+        /* Randomizing the skin material based on skinType */
+        
+        if (skinType == "Organic") {
+            local maxOrganicCount: number = SkinCount.Organic;
+            Runtime.expect(organicCount <= maxOrganicCount, "Maximum number of organic skin has been exceed");
+
+            _bodyType = Random.generate() % ORGANIC_CATEGORIES;
+        } else if (skinType == "Precious") {
+            local maxPreciousCount: number = SkinCount.Precious;
+            Runtime.expect(preciousCount <= maxPreciousCount, "Maximum number of precious skin has been exceed");
+
+            _bodyType = Random.generate() % PRECIOUS_CATEGORIES;
+        } else if (skinType == "Energy") {
+            local maxEnergyCount: number = SkinCount.Energy;
+            Runtime.expect(energyCount <= maxEnergyCount, "Maximum number of energy skin has been exceed");
+
+            _bodyType = Random.generate() % ENERGY_CATEGORIES;
+        }
+
+        local _imageURL: string = "";
+
+        _imageURL = bodyBaseURI + "/" + skinType + "/" + _bodyType;
+        _imageURL += ".png";
+
+		local rom: body_rom = Struct.body_rom(Time.now(), name, description, "", _imageURL, sandType, skinType, _bodyType);
+          
+        local id = NFT.mint(to, to, $THIS_SYMBOL, rom, "", SERIES_BODY);
+        // NFT.infuse(to, $THIS_SYMBOL, id, _infusionTkn, _infusionAmt);
+
+        // owns_sandy.set(to, true);
+
+        Runtime.log("New created Sandy Token " + id);
+
+        return id;
+    }
+
+    public stakeSoul(from: address, amount: number) {
+        Runtime.expect(Runtime.isWitness(from), "Must be owner to stake");
+
+        local assetNumber: number = amount * (10 ^ Token.getDecimals("SOUL"));
+
+        Token.transfer(from, $THIS_ADDRESS, "SOUL", assetNumber);
+        Stake.stake($THIS_ADDRESS, assetNumber);
+    }
+
+    public getStake(from: address): number {
+        return Stake.getStake(from);
+    }
+
+    public getStorageStake(from: address): number {
+        return Stake.getStorageStake(from);
+    }
+
+    public getThisAddress(): address {
+        return $THIS_ADDRESS;
+    }   
+
+    public getSoulAmount(amount: number): number {
+        return amount * (10 ^ Token.getDecimals("SOUL"));
+    } 
+
+    // private initMint(seriesID:number,name: string,description: string,infoURL: string,imageURL: string){
+    //     local rom:limb_rom = Struct.limb_rom(name,description,infoURL,imageURL);
+    //     local id: number = NFT.mint(owner,owner, $THIS_SYMBOL, rom,"",seriesID);
+    // }
+  
+	//@Param seriesId - Must be a unique number, could use UID.generate()
+    public createLimb(seriesID:number,limbSupply:number,name: string,description: string,infoURL: string,imageURL: string){
+        Runtime.expect(Runtime.isWitness(owner),"Must be owner of contract");
+        NFT.createSeries(owner, $THIS_SYMBOL,seriesID,limbSupply,TokenSeries.Duplicated,limb);
+        local rom:limb_rom = Struct.limb_rom(name,description,infoURL,imageURL);
+        // this.initMint(seriesID,name,description,infoURL,imageURL);
+    }
+
+   
+    //should give you a random limb back
+    public mintLimb(from:address,to:address,seriesID:number)
+    {   
+        Runtime.expect(Runtime.isWitness(from),"Must be a witness");
+        //need to randomize seriesId -> this is assuming all I need is a seriesID.
+        //do randomization for SeriesID;
+        local id: number = NFT.mint(from,to, $THIS_SYMBOL,"","",seriesID);
+    }
+
+    //Will deprecated and used for somthing else
+	//will have to make sure that the owner is the only one who can edit the sandy name
+    public editSANDY(nftOwner:address,tokenID:number,name:string) {
+        Runtime.expect(Runtime.isWitness(nftOwner),"Must be owner of NFT");//have to find a way to get current nft owner
+		local editRam:body_ram = Struct.body_ram();
+		//my assumption that write must follow the order of the struct 
+        NFT.write(nftOwner,$THIS_SYMBOL,tokenID,editRam);//changeable data
+    }
+    //need to get readable rom 
+    
+    //- How do I make return type a struct initiialized to the rom size
+    public getRom(symbol:string, id:number):body_rom {
+         local nftROM:body_rom = NFT.readROM<body_rom>($THIS_SYMBOL, id);
+         return nftROM;
+    }
+
+    public getRam(symbol:string, id:number): body_ram {
+        local nftRAM:body_ram = NFT.readRAM<body_ram>($THIS_SYMBOL, id);
+        return nftRAM;
+    }
+
+    trigger onUpgrade(from:address) {
+        // check is witness and is current owner
+		Runtime.expect(Runtime.isWitness(owner), "invalid witness");
+    }
+    //Mint function
+    trigger onMint(from: address, to: address, symbol: string, tokenID: number) {
+		Runtime.expect(symbol == $THIS_SYMBOL, "symbol mismatch");
+        //might need to add NFT owns to right here 
+    }
+    trigger onInfuse(from: address, to: address, symbol: string, tokenID: number) {
+        Runtime.expect(Runtime.isWitness(from), "witness failed");
+    }
+
+    trigger onSeries(from: address) {
+        Runtime.expect(Runtime.isWitness(from), "witness failed");
+    }
+
+    trigger onWrite(from: address,data:number) {
+        Runtime.expect(Runtime.isWitness(from), "witness failed");
+    }
+
+    trigger onSend(from: address, to: address, symbol: string, tokenID: number) {
+        Runtime.expect(Runtime.isWitness(from), "witness failed");
+    }
+  
+    trigger onBurn(from: address, to: address, symbol: string, tokenID: number) {
+		Runtime.expect(Runtime.isWitness(from), "witness failed");
+    }
+
+}
